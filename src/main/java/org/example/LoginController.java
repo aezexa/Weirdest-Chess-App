@@ -21,6 +21,7 @@ import java.util.regex.Pattern;
 import static org.example.RegisterController.hasNoFormatErrors;
 import static org.example.App.error;
 import static org.example.User.getUserWithName;
+import static org.example.User.setWhiteUser;
 
 public class LoginController {
 
@@ -45,7 +46,8 @@ public class LoginController {
         if ( hasNoFormatErrors ( name , password ) &&
                 hasNoLoginRemoveErrors ( name , password ) ) {
 
-//            Parent root = FXMLLoader.load(App.class.getResource( "loginCompletedScreen.fxml" ));
+            setWhiteUser ( getUserWithName ( name ) );
+
             FXMLLoader loader = new FXMLLoader ( App.class.getResource( "loginCompletedScreen.fxml" ));
             Parent root = loader.load ();
             LoginCompletedController lcc = loader.getController ();
@@ -56,13 +58,11 @@ public class LoginController {
             window.initModality ( Modality.APPLICATION_MODAL );
             window.centerOnScreen ();
             window.show ();
-//            Parent root1 = FXMLLoader.load(App.class.getResource( "gameMenuScreen.fxml" ));
+
             PauseTransition delay = new PauseTransition ( Duration.seconds(3));
             delay.setOnFinished( event -> {
                 window.close();
                 App.setRoot ( "gameMenuScreen" );
-//                App.currentStage.setScene ( new Scene ( root1 ) );
-//                App.currentStage.centerOnScreen ();
             } );
             delay.play();
         }

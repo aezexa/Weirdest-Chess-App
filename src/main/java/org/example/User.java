@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 public class User {
     public static ArrayList<User> allUsers = new ArrayList <> (  );
+    private static User whiteUser;
+    private static User blackUser;
     private String name;
     private String password;
     private int score;
@@ -31,6 +33,22 @@ public class User {
 
     public void setPassword ( String password ) {
         this.password = password;
+    }
+
+    public static void setWhiteUser ( User whiteUser ) {
+        User.whiteUser = whiteUser;
+    }
+
+    public static User getWhiteUser () {
+        return whiteUser;
+    }
+
+    public static void setBlackUser ( User blackUser ) {
+        User.blackUser = blackUser;
+    }
+
+    public static User getBlackUser () {
+        return blackUser;
     }
 
     public static User getUserWithName ( String name ) {
