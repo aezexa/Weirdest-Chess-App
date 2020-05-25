@@ -19,7 +19,8 @@ import java.util.ResourceBundle;
 import java.util.regex.Pattern;
 
 import static org.example.RegisterController.hasNoFormatErrors;
-import static org.example.User.allUsers;
+import static org.example.App.error;
+import static org.example.User.getUserWithName;
 
 public class LoginController {
 
@@ -70,25 +71,13 @@ public class LoginController {
     private static boolean hasNoLoginRemoveErrors ( String name , String password ) {
         User tempUser;
         if ( (tempUser = getUserWithName ( name )) == null ) {
-            Alert alert = new Alert ( Alert.AlertType.ERROR );
-            alert.setContentText ( "no user exists with this username" );
-            alert.showAndWait ();
+            error (  "This Person Isn't Real Yet."  );
             return false;
         } else if ( !tempUser.getPassword ( ).equals ( password ) ) {
-            Alert alert = new Alert ( Alert.AlertType.ERROR );
-            alert.setContentText ( "incorrect password" );
-            alert.showAndWait ();
+            error ( "Wrong Password" );
             return false;
         } else
             return true;
-    }
-
-    public static User getUserWithName ( String name ) {
-        for (User user : allUsers) {
-            if ( user.getName ( ).equals ( name ) )
-                return user;
-        }
-        return null;
     }
     @FXML
     private void cancelButtonAction () {

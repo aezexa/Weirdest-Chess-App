@@ -37,7 +37,7 @@
                <font>
                   <Font name="Copperplate Gothic Bold" size="12.0" />
                </font></Button>
-            <Button fx:id="delete_account_button" alignment="CENTER" layoutX="200.0" layoutY="170.0" mnemonicParsing="false" onAction="#deleteAccountButtonAction" prefWidth="200.0" text="Delete Account">
+            <Button alignment="CENTER" layoutX="200.0" layoutY="170.0" mnemonicParsing="false" onAction="#deleteAccountButtonAction" prefWidth="200.0" text="Delete Account">
                <font>
                   <Font name="Copperplate Gothic Bold" size="12.0" />
                </font></Button>

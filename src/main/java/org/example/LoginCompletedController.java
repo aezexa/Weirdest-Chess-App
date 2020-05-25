@@ -10,8 +10,8 @@ import java.util.ResourceBundle;
 
 public class LoginCompletedController implements Initializable {
 
-    @FXML
-    private Label usernameLabel;
+    @FXML private Label usernameLabel;
+    @FXML private Label hintLabel;
 
     @Override
     public void initialize ( URL url , ResourceBundle resourceBundle ) {
@@ -20,5 +20,6 @@ public class LoginCompletedController implements Initializable {
 
     public void setName ( String name ) {
         usernameLabel.setText ( "Welcome To The Game " + name + "!" );
+        hintLabel.setText ( "(This will be just a waste of your time lol)" );
     }
 }

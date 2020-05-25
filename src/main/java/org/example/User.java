@@ -29,6 +29,18 @@ public class User {
         return password;
     }
 
+    public void setPassword ( String password ) {
+        this.password = password;
+    }
+
+    public static User getUserWithName ( String name ) {
+        for (User user : allUsers) {
+            if ( user.getName ( ).equals ( name ) )
+                return user;
+        }
+        return null;
+    }
+
     int getScore () {
         return score;
     }

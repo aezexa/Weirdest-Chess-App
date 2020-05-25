@@ -19,6 +19,8 @@ import java.util.ResourceBundle;
 import java.util.regex.Pattern;
 
 import static org.example.User.allUsers;
+import static org.example.User.getUserWithName;
+import static org.example.App.error;
 
 public class RegisterController implements Initializable {
 
@@ -62,14 +64,10 @@ public class RegisterController implements Initializable {
 
     public static boolean hasNoFormatErrors ( String name , String password ) {
         if ( !userPassFormatPattern.matcher ( name ).matches ( ) ) {
-            Alert alert = new Alert ( Alert.AlertType.ERROR );
-            alert.setContentText ( "Username Format Is Invalid" );
-            alert.showAndWait ();
+            error ( "Username Format Is Invalid" );
             return false;
         } else if ( !userPassFormatPattern.matcher ( password ).matches ( ) ) {
-            Alert alert = new Alert ( Alert.AlertType.ERROR );
-            alert.setContentText ( "Password Format Is Invalid" );
-            alert.showAndWait ();
+            error ( "Password Format Is Invalid" );
             return false;
         } else
             return true;
@@ -77,20 +75,10 @@ public class RegisterController implements Initializable {
 
     private static boolean hasRegisterErrors ( String name ) {
         if ( getUserWithName ( name ) != null ) {
-            Alert alert = new Alert ( Alert.AlertType.ERROR );
-            alert.setContentText ( "A User Exists With This Username" );
-            alert.showAndWait ();
+            error ( "This Person Is Already Real." );
             return true;
         }
         return false;
-    }
-
-    public static User getUserWithName ( String name ) {
-        for (User user : allUsers) {
-            if ( user.getName ( ).equals ( name ) )
-                return user;
-        }
-        return null;
     }
 
     @FXML
