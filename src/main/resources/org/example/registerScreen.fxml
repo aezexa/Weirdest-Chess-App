@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.RegisterController">
+    <children>
+        <Label fx:id="registerLabel" alignment="CENTER" layoutX="223.0" layoutY="27.0" prefHeight="66.0" prefWidth="153.0" text="Register" textFill="#1ab23d" AnchorPane.bottomAnchor="306.6" AnchorPane.leftAnchor="223.0" AnchorPane.rightAnchor="223.39999999999998" AnchorPane.topAnchor="27.0">
+            <font>
+                <Font name="Comic Sans MS" size="34.0" />
+            </font>
+        </Label>
+        <TextField fx:id="usernameField" layoutX="226.0" layoutY="187.0" promptText="Username" />
+        <PasswordField fx:id="passwordField" layoutX="226.0" layoutY="256.0" promptText="Password" />
+        <Label layoutX="273.0" layoutY="160.0" text="Username" />
+        <Label layoutX="275.0" layoutY="230.0" text="Password" />
+        <Button fx:id="registerButton" defaultButton="true" layoutX="226.0" layoutY="313.0" mnemonicParsing="false" onAction="#registerButtonAction" prefHeight="26.0" prefWidth="70.0" text="Register" />
+        <Button fx:id="cancelButton" cancelButton="true" layoutX="305.0" layoutY="313.0" mnemonicParsing="false" onAction="#cancelButtonAction" prefHeight="26.0" prefWidth="69.0" text="Cancel" />
+    </children>
+</AnchorPane>

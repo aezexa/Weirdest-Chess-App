@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.LoginCompletedController">
+   <children>
+      <Label layoutX="235.0" layoutY="191.0" text="Login Completed Screen" />
+      <Label fx:id="usernameLabel" alignment="CENTER" layoutX="206.0" layoutY="228.0" prefHeight="74.0" prefWidth="189.0" text="username" textAlignment="CENTER" AnchorPane.bottomAnchor="98.0" AnchorPane.leftAnchor="206.0" AnchorPane.rightAnchor="205.0" AnchorPane.topAnchor="228.0" />
+   </children>
+</AnchorPane>
