@@ -2,27 +2,30 @@ package main;
 
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 
 public class ChessBar extends HBox {
 
     public ChessBar () {
+//        this.setTranslateX ( 0 );
+//        this.setTranslateY ( 0 );
+        this.setLayoutX ( 0 );
+        this.setLayoutY ( 100 );
+        this.setPrefSize ( 600,100 );
+        this.setMaxSize ( 600,100 );
         barScreen = new GridPane ();
         resetButton = new Button ( "Reset" );
         exitButton = new Button ( "Exit" );
 
-        barScreen.setGridLinesVisible ( false );
-        barScreen.setPrefSize ( 600,600 );
-//        barScreen.setVgap ( 10 );
-//        barScreen.setHgap ( 10 );
-//        barScreen.setPadding ( new Insets ( 10,10,10,10 ) );
+        barScreen.setGridLinesVisible ( true );
+//        barScreen.setMaxSize ( 600,100 );
+        barScreen.setPrefSize ( 600,100 );
         barScreen.setStyle ( "-fx-background-color: #ffb34b; -fx-effect: innershadow(gaussian,rgba(0,0,0,4),75,0,5,0,10)" );
         barScreen.setSnapToPixel ( false );
 
@@ -46,8 +49,14 @@ public class ChessBar extends HBox {
             if (child instanceof Label)
                 child.setStyle ( "-fx-font-size: 10pt; -fx-font-weight: bold; -fx-opacity: 1.0; -fx-font-family: 'Copperplate Gothic Bold'" );
         }
+
         getChildren ().add ( barScreen );
 
+        barScreen.setBorder ( new Border (new BorderStroke( Color.BLUE,
+                BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)) );
+
+        this.setBorder ( new Border (new BorderStroke( Color.RED,
+                BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)) );
     }
     public Label turn;
     public Label timer;

@@ -29,22 +29,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        initializeSounds ();
-        App.currentStage = stage ;
-        BorderPane root = getFXMLLoader ("mainScreen").load ();
-        currentScene = new Scene ( root, 600, 400 );
-        currentScene.addEventFilter( MouseEvent.MOUSE_PRESSED, mouseEvent -> sound ( ) );
-        stage.setTitle ( "Weird Chess" );
-        stage.setScene( currentScene );
-        stage.setResizable ( false ); //felan
-//        root.prefHeightProperty().bind(currentScene.heightProperty());
-//        root.prefWidthProperty().bind(currentScene.widthProperty());
-        stage.show();
-//        currentStage = stage;
-//        currentScene = new Scene ( getFXMLLoader ( "chessScreen" ).load (), 600 , 700 );
-//        stage.setScene ( currentScene );
-//        stage.show ();
-//        setRoot ( "chessScreen" );
+        startChess ( stage );
     }
 
 
@@ -86,6 +71,26 @@ public class App extends Application {
     public static void sound ( ) {
         Random rand = new Random ();
         clickSounds.get(rand.nextInt(clickSounds.size())).play ();
+    }
+
+    private static void startGame (Stage stage) throws IOException {
+        initializeSounds ();
+        App.currentStage = stage ;
+        BorderPane root = getFXMLLoader ("mainScreen").load ();
+        currentScene = new Scene ( root, 600, 400 );
+        currentScene.addEventFilter( MouseEvent.MOUSE_PRESSED, mouseEvent -> sound ( ) );
+        stage.setTitle ( "Weird Chess" );
+        stage.setScene( currentScene );
+        stage.setResizable ( false ); //felan
+//        root.prefHeightProperty().bind(currentScene.heightProperty());
+//        root.prefWidthProperty().bind(currentScene.widthProperty());
+        stage.show();
+    }
+
+    private static void startChess (Stage stage) throws IOException {
+        currentStage = stage;
+        BorderPane root = getFXMLLoader ( "chessScreen" ).load ();
+        stage.show ();
     }
 
 }

@@ -3,6 +3,7 @@
 .idea
 out
 untitled1.iml
+.log
 # Datasource local storage ignored files
 /dataSources/
 /dataSources.local.xml

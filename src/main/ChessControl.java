@@ -32,6 +32,8 @@ public class ChessControl extends Control  {
         setSkin ( new SkinBase <> ( this ) {
         } );
 
+        AnchorPane anchorPane = new AnchorPane (  );
+
         chessBar = new ChessBar (  );
         chessBoard = new ChessBoard (chessBar);
         FileInputStream input = null;
@@ -46,18 +48,9 @@ public class ChessControl extends Control  {
         boardImage.setFitHeight ( 600 );
         boardImage.setX ( 0 );
         boardImage.setY ( 100 );
-//        boardImage.setLayoutY ( 100 );
-        boardImage.setTranslateY ( 50 );
         boardImage.setPreserveRatio ( true );
-        getChildren ().addAll ( chessBar,chessBoard,boardImage );
-//        centerPane.getChildren ().addAll ( chessBoard, boardImage );
-//        centerPane.setPrefSize ( 600,600 );
-//        centerPane.setCenterShape ( true );
-//        chessBar.setAlignment ( Pos.BOTTOM_CENTER );
-//        centerPane.setAlignment ( Pos.TOP_CENTER );
-//        mainBorderPane.setCenter ( centerPane );
-//        mainBorderPane.setTop ( chessBar );
-//        getChildren ().addAll ( mainBorderPane );
+        anchorPane.getChildren ().addAll ( boardImage , chessBar , chessBoard);
+        getChildren ().addAll ( anchorPane );
 
         setOnMouseClicked ( event -> {
             System.out.println ( "x : " + (int) event.getX ()*8/600 + "\ny : " + (int) event.getY ()*8/600 );

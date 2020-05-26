@@ -1,48 +1,27 @@
 package main;
 
 import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.StrokeType;
+import javafx.scene.transform.Translate;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 
 import static main.App.inGame;
 
 public class ChessBoard extends Pane {
     public ChessBoard (ChessBar chessBar) {
         this.setLayoutX ( 0 );
-        this.setLayoutY ( 100 );
-//        this.setTranslateY ( 100 );
+        this.setLayoutY ( 0 );
+//        this.setTranslateY ( 50 );
         this.setPrefHeight ( 600.0 );
         this.setPrefWidth ( 600.0 );
-//
-//
-//        initializeGame ();
-//
-//        FileInputStream input = null;
-//        try {
-//            input = new FileInputStream ( new File ( "." ).getCanonicalPath () + File.separator + "src" + File.separator + "resources" + File.separator + "board.jpg" );
-//        } catch (IOException e) {
-//            e.printStackTrace ( );
-//        }
-//        assert input != null;
-//        Image image = new Image (input);
-//        ImageView boardImage = new ImageView ( image );
-//        boardImage.setFitHeight ( 600.0 );
-//        boardImage.setFitWidth ( 600.0 );
-//        boardImage.setPreserveRatio ( true );
-//
-////        chessBoard = new ChessBoard (  );
-//
-////        centerPane.getChildren ().addAll ( boardImage , chessBoard ); felan image ndare
 
+        this.setBorder ( new Border(new BorderStroke(Color.BROWN,
+                BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)) );
+
+        initializeGame ();
 
     }
 
@@ -57,9 +36,12 @@ public class ChessBoard extends Pane {
             for (int j = 0; j < tileNum; j++) {
                 board[i][j] = new Tile ( i , j );
                 board[i][j].resize ( tileWidth, tileHeight );
+                getChildren ().add ( board[i][j] );
 //                board[i][j].setPrefSize ( tileWidth, tileHeight );
 //                chessBoard.add ( board[i][j],i,j );
             }
+
+        setOnMouseClicked ( mouseEvent -> System.out.println ( mouseEvent.getX () + " " + mouseEvent.getY () ) );
     }
 
     private BorderPane mainBorderPane;
@@ -74,10 +56,27 @@ public class ChessBoard extends Pane {
 class Tile extends Group {
     private final int positionX;
     private final int positionY;
+    private Rectangle rectangle;
+    private Translate translate;
+    private boolean isHighlighted = false;
+
+    public void highlightWindow ( Color color ) {
+        rectangle.setStrokeType( StrokeType.INSIDE );
+        rectangle.setStrokeWidth(4);
+        rectangle.setStroke(color);
+        if (color == Color.GREEN)
+            isHighlighted = true;
+    }
 
     public Tile ( int x , int y ) {
         positionX = x;
         positionY = y;
-        setOnMouseClicked ( e -> System.out.println ( positionX + " " + positionY ) );
+        rectangle = new Rectangle (  );
+        rectangle.getTransforms ().add ( translate = new Translate (  ) );
+        getChildren ().add ( rectangle );
+        setOnMouseClicked ( e -> {
+            System.out.println ( positionX + " " + positionY );
+            highlightWindow ( Color.GREEN );
+        } );
     }
 }
