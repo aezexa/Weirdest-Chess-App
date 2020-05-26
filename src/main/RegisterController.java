@@ -6,10 +6,14 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -37,6 +41,8 @@ public class RegisterController implements Initializable {
 
     ScreensController myController;
 
+    static MediaPlayer mediaPlayer;
+
 
     @FXML
     private void registerButtonAction () throws IOException {
@@ -44,17 +50,20 @@ public class RegisterController implements Initializable {
         String name = usernameField.getText ();
         String password = passwordField.getText ();
 
+        Parent root = getFXMLLoader ( "registrationCompletedScreen" ).load ();
+        Stage window = new Stage ( );
+        window.setTitle ( "Registeration Completed!!1" );
+        Scene scene = new Scene ( root );
+        scene.addEventFilter( MouseEvent.MOUSE_PRESSED, mouseEvent -> sound () );
+        window.setScene ( scene );
+        window.initModality ( Modality.APPLICATION_MODAL );
+
         if ( hasNoFormatErrors ( name , password ) &&
                 !hasRegisterErrors ( name ) ) {
 
             User.allUsers.add ( new User ( name , password ) );
-            Parent root = getFXMLLoader ( "registrationCompletedScreen" ).load ();
-            Stage window = new Stage ( );
-            window.setTitle ( "Registeration Completed!!1" );
-            Scene scene = new Scene ( root );
-            scene.addEventFilter( MouseEvent.MOUSE_PRESSED, mouseEvent -> sound () );
-            window.setScene ( scene );
-            window.initModality ( Modality.APPLICATION_MODAL );
+            mediaPlayer = new MediaPlayer ( new Media ( new File ( "src/resources/congrats.mp3" ).toURI ().toString () ) );
+            mediaPlayer.play ();
             window.showAndWait ();
             App.setRoot ( "mainScreen" );
         }
@@ -87,6 +96,7 @@ public class RegisterController implements Initializable {
     @FXML
     private void destroyButtonAction () {
         Stage stage = (Stage) destroyButton.getScene().getWindow();
+        mediaPlayer.stop ();
         stage.close ();
     }
 

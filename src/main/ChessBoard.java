@@ -1,102 +1,83 @@
 package main;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 
-import static main.App.getFXMLLoader;
 import static main.App.inGame;
 
-public class ChessBoard {
-
-    Scene appScene;
-    Stage appStage;
-
-    void start () throws IOException {
-        App.setRoot ( "chessBoard" );
-        appScene = App.mainScene;
-        inGame = true;
-//        App.currentStage = new Stage ( getFXMLLoader("gameMenuScreen").load () );
-        StackPane mainPane = getFXMLLoader ( "chessBoard" ).load ();
-        App.currentStage.setScene ( new Scene ( mainPane, 600, 600 ) );
-        // Load your Image
-//        ImageView backgroundImageView = new ImageView (
-//                new Image ("/resources/Black-board-4.jpg",600,600,false,false));
-        // Initialize the grid
-        GridPane boardGrid = initBoard();
-        // Set the dimensions of the grid
-        boardGrid.setPrefSize(BORDER_WIDTH, BORDER_HEIGHT);
-
-        // Use a StackPane to display the Image and the Grid
-        Button exitButton = new Button ( "Exit" );
-        exitButton.setOnAction ( event -> {
-            App.setRoot ( "gameMenuScreen" );
-            App.currentStage.setScene ( appScene );
-            inGame = false;
-        } );
-//        mainPane.getChildren().addAll(backgroundImageView, boardGrid,exitButton);
-        mainPane.getChildren().addAll(boardGrid,exitButton);
-//        Stage stage = null;
+public class ChessBoard extends Pane {
+    public ChessBoard (ChessBar chessBar) {
+        this.setLayoutX ( 0 );
+        this.setLayoutY ( 100 );
+//        this.setTranslateY ( 100 );
+        this.setPrefHeight ( 600.0 );
+        this.setPrefWidth ( 600.0 );
+//
+//
+//        initializeGame ();
+//
+//        FileInputStream input = null;
 //        try {
-//            stage = new Stage ( getFXMLLoader("gameMenuScreen").load () );
+//            input = new FileInputStream ( new File ( "." ).getCanonicalPath () + File.separator + "src" + File.separator + "resources" + File.separator + "board.jpg" );
 //        } catch (IOException e) {
 //            e.printStackTrace ( );
 //        }
-//        assert stage != null;
-//        stage.setScene(new Scene (mainPane, 600, 600));
-//        stage.setResizable(false);
-//        stage.show();
-//        App.mainScene = new Scene (mainPane, 600, 600);
+//        assert input != null;
+//        Image image = new Image (input);
+//        ImageView boardImage = new ImageView ( image );
+//        boardImage.setFitHeight ( 600.0 );
+//        boardImage.setFitWidth ( 600.0 );
+//        boardImage.setPreserveRatio ( true );
+//
+////        chessBoard = new ChessBoard (  );
+//
+////        centerPane.getChildren ().addAll ( boardImage , chessBoard ); felan image ndare
+
+
     }
 
-    private GridPane initBoard() {
-        GridPane boardGrid = new GridPane();
+    private void initializeGame () {
+
+        inGame = true;
+        board = new Tile[8][8];
 
         int tileNum = 8;
-        double tileWidth = (double) BORDER_WIDTH / tileNum;
-        double tileHeight = (double) BORDER_HEIGHT / tileNum;
 
-        for (int i = 0; i < tileNum; i++) {
+        for (int i = 0; i < tileNum; i++)
             for (int j = 0; j < tileNum; j++) {
-                Tile tile = new Tile ( i , j );
-                // Set each 'Tile' the width and height
-                tile.setPrefSize(tileWidth, tileHeight);
-                // Add node on j column and i row
-                boardGrid.add(tile, j, i);
+                board[i][j] = new Tile ( i , j );
+                board[i][j].resize ( tileWidth, tileHeight );
+//                board[i][j].setPrefSize ( tileWidth, tileHeight );
+//                chessBoard.add ( board[i][j],i,j );
             }
-        }
-        // Return the GridPane
-        return boardGrid;
     }
 
-    static class Tile extends Pane {
-        private final int positionX;
-        private final int positionY;
-
-        public Tile(int x, int y) {
-            positionX = x;
-            positionY = y;
-            setOnMouseClicked(e -> System.out.println(positionX + " " + positionY) );
-        }
-    }
-
-    private static void initializeGame () {
-
-    }
-
-    private static void endGame () {
-
-    }
-
+    private BorderPane mainBorderPane;
     private final int BORDER_WIDTH = 600;
     private final int BORDER_HEIGHT = 600;
+    private final int tileNum = 8;
+    private final double tileWidth = (double) BORDER_WIDTH / tileNum;
+    private final double tileHeight = (double) BORDER_HEIGHT / tileNum;
+    private Tile[][] board;
+}
+
+class Tile extends Group {
+    private final int positionX;
+    private final int positionY;
+
+    public Tile ( int x , int y ) {
+        positionX = x;
+        positionY = y;
+        setOnMouseClicked ( e -> System.out.println ( positionX + " " + positionY ) );
+    }
 }

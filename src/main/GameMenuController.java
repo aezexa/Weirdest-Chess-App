@@ -1,7 +1,6 @@
 package main;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -12,7 +11,6 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.regex.Pattern;
 
-import static main.App.error;
 import static main.App.getFXMLLoader;
 
 public class GameMenuController {
@@ -34,7 +32,7 @@ public class GameMenuController {
     private void newGameButtonAction () throws IOException {
         Parent root = getFXMLLoader ( "newGameInputScreen" ).load ( );
         Stage window = new Stage ( );
-        window.setTitle ( "Score Board" );
+        window.setTitle ( "New Game Inputs" );
         window.setScene ( new Scene ( root ) );
         window.initModality ( Modality.APPLICATION_MODAL );
         window.showAndWait ( );
@@ -43,24 +41,26 @@ public class GameMenuController {
     @FXML
     private void newGameScreenAcceptAction () {
         String name = blackUserField.getText ( );
-        int limit = Integer.parseInt ( limitField.getText ( ) );
-        if ( !hasNewGameErrors ( name , limit ) ) {
-
+        String limitString = limitField.getText ( );
+        int limit;
+        if ( !hasNewGameErrors ( name , limitString ) ) {
+            limit = Integer.parseInt ( limitString );
             User.setBlackUser ( User.getUserWithName ( name ) );
-
-            ChessBoard chessBoard = new ChessBoard ();
-            try {
-                chessBoard.start ();
-            } catch (IOException e) {
-                error ( "Start Nshd" );
-            }
             destroyButtonAction ();
+            App.appScene = App.currentScene;
+            App.setRoot ( "chessScreen" );
 
-//            GameMenu.goToGame ( whiteUser , blackUser , limit , scanner );
         }
     }
 
-    private static boolean hasNewGameErrors ( String name , int limit ) {
+    private static boolean hasNewGameErrors ( String name , String limitString ) {
+        int limit;
+        try {
+            limit = Integer.parseInt ( limitString );
+        } catch (NumberFormatException e) {
+            App.error ( "Limit Should Be A Number" );
+            return true;
+        }
         if ( !Pattern.compile ( "\\w+" ).matcher ( name ).matches ( ) ) {
             App.error ( "Username Format Is Invalid" );
             return true;

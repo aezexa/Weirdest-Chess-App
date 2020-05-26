@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -57,6 +58,10 @@ public class LoginController {
 
             PauseTransition delay = new PauseTransition ( Duration.seconds(3));
             delay.setOnFinished( event -> {
+                window.close();
+                App.setRoot ( "gameMenuScreen" );
+            } );
+            scene.addEventHandler ( KeyEvent.KEY_PRESSED, keyEvent -> {
                 window.close();
                 App.setRoot ( "gameMenuScreen" );
             } );

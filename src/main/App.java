@@ -11,6 +11,7 @@ import javafx.scene.media.AudioClip;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
@@ -20,7 +21,8 @@ import java.util.Random;
  */
 public class App extends Application {
 
-    public static Scene mainScene;
+    public static Scene currentScene;
+    public static Scene appScene;
     public static Stage currentStage;
     public static ArrayList<AudioClip> clickSounds;
     public static boolean inGame;
@@ -30,16 +32,29 @@ public class App extends Application {
         initializeSounds ();
         App.currentStage = stage ;
         BorderPane root = getFXMLLoader ("mainScreen").load ();
-        mainScene = new Scene ( root, 600, 400 );
-        mainScene.addEventFilter( MouseEvent.MOUSE_PRESSED, mouseEvent -> sound ( ) );
+        currentScene = new Scene ( root, 600, 400 );
+        currentScene.addEventFilter( MouseEvent.MOUSE_PRESSED, mouseEvent -> sound ( ) );
         stage.setTitle ( "Weird Chess" );
-        stage.setScene( mainScene );
+        stage.setScene( currentScene );
+        stage.setResizable ( false ); //felan
+//        root.prefHeightProperty().bind(currentScene.heightProperty());
+//        root.prefWidthProperty().bind(currentScene.widthProperty());
         stage.show();
+//        currentStage = stage;
+//        currentScene = new Scene ( getFXMLLoader ( "chessScreen" ).load (), 600 , 700 );
+//        stage.setScene ( currentScene );
+//        stage.show ();
+//        setRoot ( "chessScreen" );
+    }
+
+
+    static void setRoot(Parent root) {
+        currentScene.setRoot( root );
     }
 
     static void setRoot(String fxml) {
         try {
-            mainScene.setRoot( getFXMLLoader (fxml).load () );
+            currentScene.setRoot ( getFXMLLoader ( fxml ).load () );
         } catch (IOException e) {
             e.printStackTrace ( );
         }
