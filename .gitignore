@@ -1,7 +1,8 @@
 # Default ignored files
 /shelf/
 .idea
-target
+out
+untitled1.iml
 # Datasource local storage ignored files
 /dataSources/
 /dataSources.local.xml
