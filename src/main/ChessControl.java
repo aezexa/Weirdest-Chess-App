@@ -49,12 +49,9 @@ public class ChessControl extends Control  {
         boardImage.setX ( 0 );
         boardImage.setY ( 100 );
         boardImage.setPreserveRatio ( true );
+
         anchorPane.getChildren ().addAll ( boardImage , chessBar , chessBoard);
         getChildren ().addAll ( anchorPane );
-
-        setOnMouseClicked ( event -> {
-            System.out.println ( "x : " + (int) event.getX ()*8/600 + "\ny : " + (int) event.getY ()*8/600 );
-        } );
 
         chessBar.getExitButton ().setOnAction ( event -> endGame () );
 
