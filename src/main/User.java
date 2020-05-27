@@ -88,7 +88,7 @@ public class User {
     }
 
     public boolean userOwnsSquare ( int row , int column ) {
-        return userOwnership[row - 1][column - 1];
+        return userOwnership[row][column];
     }
 
     public boolean isTurn () {
@@ -116,7 +116,7 @@ public class User {
     }
 
     public void setUserOwnsSquare ( int row , int column , boolean type ) {
-        userOwnership[row - 1][column - 1] = type;
+        userOwnership[row][column] = type;
     }
 
     public void reduceUndo () {

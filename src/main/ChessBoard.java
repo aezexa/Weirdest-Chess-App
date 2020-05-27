@@ -10,6 +10,20 @@ import javafx.scene.transform.Translate;
 import static main.App.*;
 
 public class ChessBoard extends Pane {
+
+    private BorderPane mainBorderPane;
+    private final int BORDER_WIDTH = 600;
+    private final int BORDER_HEIGHT = 600;
+    private final int tileNum = 8;
+    public final double tileWidth = (double) BORDER_WIDTH / tileNum;
+    public final double tileHeight = (double) BORDER_HEIGHT / tileNum;
+    private Tile[][] board;
+    private int selectedRow;
+    private int selectedColumn;
+    boolean isPieceSelected;
+    private int selectedPieceRow;
+    private int selectedPieceColumn;
+
     public ChessBoard (ChessBar chessBar) {
         this.setLayoutX ( 0 );
         this.setLayoutY ( 0 );
@@ -73,12 +87,62 @@ public class ChessBoard extends Pane {
                 if (row == 0 || row == 1 || row == 6 || row == 7)
                     getChildren ().add ( board[row][column].getPiece ().getImageView () );
 
+
+
+//        movesUnlimited = (moveLimit == 0);
+//        isSelected = false; //selected ints and undo variables are automatically handled in functions
+//        hadKill = false;
+//        hasMoved = false;
+//        hasUsedUndo = false;
+//        prevOppositeTurnOwnership = false;
+//        allUsersMoveHistory.clear ( );
+//        allUsersKillHistory.clear ( );
+//        gameLeaveKey = false;
+//        kingHasBeenHit = false;
+//
+//        moveStringToAppend = "";
+//        killStringToAppend = "";
+//
+//        Variables.whiteUser.setRemainingUndo ( 2 );
+//        Variables.blackUser.setRemainingUndo ( 2 );
+//        Variables.whiteUser.setTurn ( true );
+//        Variables.blackUser.setTurn ( false );
+//        Variables.whiteUser.clearMoveAndKillHistory ( );
+//        Variables.blackUser.clearMoveAndKillHistory ( );
+//
+        User.setWhiteUser ( new User ( "Alireza", "1" ) );
+        User.setBlackUser ( new User ( "Alireza's Enemy", "1" ) );
+        setFirstOwnership ( );
+
         setOnMouseClicked ( mouseEvent -> {
             selectedColumn = (int) (mouseEvent.getX ()/tileWidth);
             selectedRow = (int) (mouseEvent.getY ()/tileHeight);
             unhighlightTiles ();
             board[selectedRow][selectedColumn].highlightTile ( Color.BLACK );
+            System.out.println ( "selected row : " + selectedRow );
+            System.out.println ( "selected column : " + selectedColumn );
+            System.out.println ( "selected piece : " + board[selectedRow][selectedColumn].getPiece () );
+            selectPiece ();
+
+            if (isPieceSelected) {
+                System.out.println ( "selected row to move : " + selectedPieceRow );
+                System.out.println ( "selected column to move : " + selectedPieceColumn );
+            }
+            System.out.println ( "\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014" );
         } );
+    }
+
+    private static void setFirstOwnership () {
+        for (int row = 0; row <= 1; row++)
+            for (int column = 0; column < 8; column++) {
+                User.getWhiteUser ().setUserOwnsSquare ( row , column , true );
+                User.getBlackUser ().setUserOwnsSquare ( 7 - row , column , true );
+            }
+        for (int row = 2; row < 8; row++)
+            for (int column = 0; column < 8; column++) {
+                User.getWhiteUser ().setUserOwnsSquare ( row , column , false );
+                User.getBlackUser ().setUserOwnsSquare ( 7 - row , column , false );
+            }
     }
 
     public void unhighlightTiles () {
@@ -93,17 +157,47 @@ public class ChessBoard extends Pane {
         }
     }
 
-    private BorderPane mainBorderPane;
-    private final int BORDER_WIDTH = 600;
-    private final int BORDER_HEIGHT = 600;
-    private final int tileNum = 8;
-    public final double tileWidth = (double) BORDER_WIDTH / tileNum;
-    public final double tileHeight = (double) BORDER_HEIGHT / tileNum;
-    private Tile[][] board;
-    private int selectedColumn;
-    private int selectedRow;
+    public void selectPiece () {
+        isPieceSelected = false;
+        if ( !hasSelectErrors ( selectedRow , selectedColumn ) ) {
+            if ( getTurnUser ( ).userOwnsSquare ( selectedRow , selectedColumn ) ) {
+                isPieceSelected = true;
+                selectedPieceRow = selectedRow;
+                selectedPieceColumn = selectedColumn;
+            }
+        }
+    }
+
+    static boolean hasSelectErrors ( int row , int column ) {
+
+        if ( getOppositeTurnUser ( ).userOwnsSquare ( row , column ) ) {
+            System.out.println ( "you can only select one of your pieces" );
+            return true;
+        } else if ( !getTurnUser ( ).userOwnsSquare ( row , column ) ) {
+            System.out.println ( "no piece on this spot" );
+            return true;
+        }
+        return false;
+    }
+
+    static User getTurnUser () {
+        if ( User.getWhiteUser ().isTurn ( ) )
+            return User.getWhiteUser ();
+        return User.getBlackUser ();
+    }
+
+    static User getOppositeTurnUser () {
+        if ( User.getWhiteUser ().isTurn ( ) )
+            return User.getBlackUser ();
+        return User.getWhiteUser ();
+    }
+
+
+
+
 
     static class Tile extends Pane {
+
         private final int rowPosition;
         private final int columnPosition;
         private Rectangle rectangle;
@@ -111,6 +205,23 @@ public class ChessBoard extends Pane {
         private boolean isHighlighted = false;
         private final int tileLength = 75;
         private Piece piece;
+
+
+
+        public Tile ( int row, int column ) {
+            columnPosition = column;
+            rowPosition = row;
+            rectangle = new Rectangle ( tileLength,tileLength );
+            this.setHeight ( tileLength );
+            this.setWidth ( tileLength );;
+            this.setLayoutX ( column*tileLength );
+            this.setLayoutY ( row*tileLength );
+            rectangle.maxHeight ( tileLength );
+            rectangle.maxWidth ( tileLength );
+            rectangle.setFill ( Color.TRANSPARENT );
+            rectangle.getTransforms ().add ( translate = new Translate (  ) );
+            getChildren ().add ( rectangle );
+        }
 
         public void highlightTile ( Color color ) {
 //            this.setStyle ( "-fx-border-color: #8e09ff;-fx-border-radius: 10;-fx-border-width: 3" );
@@ -151,21 +262,8 @@ public class ChessBoard extends Pane {
         public Piece getPiece () {
             return piece;
         }
-
-        public Tile ( int row, int column ) {
-            columnPosition = column;
-            rowPosition = row;
-            rectangle = new Rectangle ( tileLength,tileLength );
-            this.setHeight ( tileLength );
-            this.setWidth ( tileLength );;
-            this.setLayoutX ( column*tileLength );
-            this.setLayoutY ( row*tileLength );
-            rectangle.maxHeight ( tileLength );
-            rectangle.maxWidth ( tileLength );
-            rectangle.setFill ( Color.TRANSPARENT );
-            rectangle.getTransforms ().add ( translate = new Translate (  ) );
-            getChildren ().add ( rectangle );
-        }
     }
+
+
 }
 

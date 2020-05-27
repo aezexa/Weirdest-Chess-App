@@ -21,10 +21,20 @@ public class ChessBar extends HBox {
         resetButton = new Button ( "Reset" );
         resetButton.setPrefWidth ( 200 );
         resetButton.setPrefHeight ( 50 );
+        resetButton.setOnMouseEntered(e -> resetButton.setBorder ( new Border(new BorderStroke(Color.BLACK,
+                BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths ( 3 ))) ));
+        resetButton.setOnMouseExited(e -> resetButton.setBorder ( new Border(new BorderStroke(Color.TRANSPARENT,
+                BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)) ));
+
 
         exitButton = new Button ( "Exit" );
         exitButton.setPrefWidth ( 200 );
         exitButton.setPrefHeight ( 50 );
+        exitButton.setCancelButton ( true );
+        exitButton.setOnMouseEntered(e -> exitButton.setBorder ( new Border(new BorderStroke(Color.BLACK,
+                    BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths ( 3 ))) ));
+        exitButton.setOnMouseExited(e -> exitButton.setBorder ( new Border(new BorderStroke(Color.TRANSPARENT,
+                    BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)) ));
 
         barScreen.setGridLinesVisible ( true );
         barScreen.setPrefSize ( 600,100 );
@@ -33,8 +43,10 @@ public class ChessBar extends HBox {
 
         ColumnConstraints columnConstraints = new ColumnConstraints (  );
         columnConstraints.setPercentWidth ( 50 );
+        ColumnConstraints columnConstraintsButton = new ColumnConstraints (  );
+        columnConstraintsButton.setPercentWidth ( 20 );
 
-        barScreen.getColumnConstraints ().addAll ( columnConstraints,columnConstraints,columnConstraints );
+        barScreen.getColumnConstraints ().addAll ( columnConstraints,columnConstraintsButton,columnConstraints );
 
         RowConstraints rowConstraints = new RowConstraints ( 50 );
         barScreen.getRowConstraints ().addAll ( rowConstraints , rowConstraints );
@@ -48,8 +60,7 @@ public class ChessBar extends HBox {
         for (Node child : barScreen.getChildren ( )) {
             GridPane.setHalignment ( child , HPos.CENTER );
             GridPane.setValignment ( child , VPos.CENTER );
-            if (child instanceof Label)
-                child.setStyle ( "-fx-font-size: 10pt; -fx-font-weight: bold; -fx-opacity: 1.0; -fx-font-family: 'Copperplate Gothic Bold'" );
+            child.setStyle ( "-fx-font-size: 10pt; -fx-font-weight: bold; -fx-opacity: 1.0; -fx-font-family: 'Copperplate Gothic Bold'" );
         }
 
         getChildren ().add ( barScreen );
