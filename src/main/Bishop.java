@@ -3,7 +3,7 @@ package main;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-public class PieceBishop extends Piece{
+public class Bishop extends Piece{
 
 //	private int xPos;
 //	private int yPos;
@@ -11,35 +11,24 @@ public class PieceBishop extends Piece{
 	private Image image;
 //	private ImageView imageView = new ImageView();
 
-	public PieceBishop(int type, int xPos, int yPos) {
-		super(type, xPos, yPos);
+	public Bishop ( int type, int row, int column) {
+		super(type, row, column);
 		name = "Bishop";
 //		this.type = type;
-//		this.xPos = xPos;
-//		this.yPos = yPos;
+//		this.row = row;
+//		this.column = column;
 		// TODO Auto-generated constructor stub
-		if(type==1){
-			image = new Image("file:src/ChessPiece/White_Bishop.png");
-			imageView.setImage(image);
-			imageView.fitHeightProperty();
-			imageView.fitWidthProperty();
-	        imageView.setPreserveRatio(true);
-	        imageView.setSmooth(true);
-	        imageView.setCache(true);
-		}
-		else{
-			image = new Image("file:src/ChessPiece/Black_Bishop.png");
-			imageView.setImage(image);
-			imageView.fitHeightProperty();
-			imageView.fitWidthProperty();
-	        imageView.setPreserveRatio(true);
-	        imageView.setSmooth(true);
-	        imageView.setCache(true);
-		}
+		if ( type == 0 )
+			image = new Image ( "/resources/White_Bishop.png" );
+		else
+			image = new Image ( "/resources/Black_Bishop.png" );
+		imageView.setImage ( image );
+		super.setImageProperty ( );
+
 	}
 	
 	@Override
-	public ImageView getImage() {
+	public ImageView getImageView () {
 		return (imageView);
 	}
 	

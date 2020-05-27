@@ -2,15 +2,13 @@ package main;
 
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
-import javafx.animation.Timeline;
+
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.layout.Pane;
-import javafx.scene.media.Media;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
@@ -59,40 +57,40 @@ public class ChessBruh extends Pane {
 	{
 		// Initialize the pieces and put it on the board
 		// BLACK Pieces
-		rook_2_1 = new PieceRook(2, 0, 0); 
-		knight_2_1 = new PieceKnight(2, 1, 0);
-		bishop_2_1 = new PieceBishop(2, 2, 0);
-		queen_2 = new PieceQueen(2, 3, 0); 
-		king_2 = new PieceKing(2, 4, 0);
-		bishop_2_2 = new PieceBishop(2, 5, 0);
-		knight_2_2 = new PieceKnight(2, 6, 0);
-		rook_2_2 = new PieceRook(2, 7, 0);
-		pawn_2_1 = new PiecePawn(2, 0, 1);
-		pawn_2_2 = new PiecePawn(2, 1, 1);
-		pawn_2_3 = new PiecePawn(2, 2, 1);
-		pawn_2_4 = new PiecePawn(2, 3, 1);
-		pawn_2_5 = new PiecePawn(2, 4, 1);
-		pawn_2_6 = new PiecePawn(2, 5, 1);
-		pawn_2_7 = new PiecePawn(2, 6, 1);
-		pawn_2_8 = new PiecePawn(2, 7, 1);
+		rook_2_1 = new Rook (2, 0, 0);
+		knight_2_1 = new Knight (2, 1, 0);
+		bishop_2_1 = new Bishop (2, 2, 0);
+		queen_2 = new Queen (2, 3, 0);
+		king_2 = new King (2, 4, 0);
+		bishop_2_2 = new Bishop (2, 5, 0);
+		knight_2_2 = new Knight (2, 6, 0);
+		rook_2_2 = new Rook (2, 7, 0);
+		pawn_2_1 = new Pawn (2, 0, 1);
+		pawn_2_2 = new Pawn (2, 1, 1);
+		pawn_2_3 = new Pawn (2, 2, 1);
+		pawn_2_4 = new Pawn (2, 3, 1);
+		pawn_2_5 = new Pawn (2, 4, 1);
+		pawn_2_6 = new Pawn (2, 5, 1);
+		pawn_2_7 = new Pawn (2, 6, 1);
+		pawn_2_8 = new Pawn (2, 7, 1);
 		
 		//WHITE Pieces
-		rook_1_1 = new PieceRook(1, 0, 7); 
-		knight_1_1 = new PieceKnight(1, 1, 7);
-		bishop_1_1 = new PieceBishop(1, 2, 7);
-		queen_1 = new PieceQueen(1, 3, 7);
-		king_1 = new PieceKing(1, 4, 7);
-		bishop_1_2 = new PieceBishop(1, 5, 7);
-		knight_1_2 = new PieceKnight(1, 6, 7);
-		rook_1_2 = new PieceRook(1, 7, 7);
-		pawn_1_1 = new PiecePawn(1, 0, 6);
-		pawn_1_2 = new PiecePawn(1, 1, 6);
-		pawn_1_3 = new PiecePawn(1, 2, 6);
-		pawn_1_4 = new PiecePawn(1, 3, 6);
-		pawn_1_5 = new PiecePawn(1, 4, 6);
-		pawn_1_6 = new PiecePawn(1, 5, 6);
-		pawn_1_7 = new PiecePawn(1, 6, 6);
-		pawn_1_8 = new PiecePawn(1, 7, 6);
+		rook_1_1 = new Rook (1, 0, 7);
+		knight_1_1 = new Knight (1, 1, 7);
+		bishop_1_1 = new Bishop (1, 2, 7);
+		queen_1 = new Queen (1, 3, 7);
+		king_1 = new King (1, 4, 7);
+		bishop_1_2 = new Bishop (1, 5, 7);
+		knight_1_2 = new Knight (1, 6, 7);
+		rook_1_2 = new Rook (1, 7, 7);
+		pawn_1_1 = new Pawn (1, 0, 6);
+		pawn_1_2 = new Pawn (1, 1, 6);
+		pawn_1_3 = new Pawn (1, 2, 6);
+		pawn_1_4 = new Pawn (1, 3, 6);
+		pawn_1_5 = new Pawn (1, 4, 6);
+		pawn_1_6 = new Pawn (1, 5, 6);
+		pawn_1_7 = new Pawn (1, 6, 6);
+		pawn_1_8 = new Pawn (1, 7, 6);
 		
 		pieces[0][0] = rook_2_1;
 		pieces[1][0] = knight_2_1;
@@ -152,7 +150,7 @@ public class ChessBruh extends Pane {
 		}
 
 		for(int i = 0; i < 8; i++){
-			getChildren().addAll(pieces[i][0].getImage(), pieces[i][1].getImage(), pieces[i][6].getImage(), pieces[i][7].getImage());
+			getChildren().addAll(pieces[i][0].getImageView (), pieces[i][1].getImageView (), pieces[i][6].getImageView (), pieces[i][7].getImageView ());
 		}
 	}
 
@@ -192,7 +190,7 @@ public class ChessBruh extends Pane {
 			for (int j = 0; j < 8; j++) {
 				board[i][j] = 0;
 				if (pieces[i][j] != null)
-					getChildren().remove(pieces[i][j].getImage());
+					getChildren().remove(pieces[i][j].getImageView ());
 				getChildren().remove(pieces[i][j]);
 				pieces[i][j] = null;
 			}
@@ -331,50 +329,50 @@ public class ChessBruh extends Pane {
 
 		Optional<ButtonType> result = alert.showAndWait();
 		if (result.get() == buttonRook){
-			promotedPiece = new PieceRook(piece.type, piece.xPos, piece.yPos);
-			getChildren().remove(piece.getImage());
-			getChildren().add(promotedPiece.getImage());
-			pieces[piece.xPos][piece.yPos] = promotedPiece;
+			promotedPiece = new Rook (piece.type, piece.row , piece.column );
+			getChildren().remove(piece.getImageView ());
+			getChildren().add(promotedPiece.getImageView ());
+			pieces[piece.row][piece.column] = promotedPiece;
 			if (piece.type == 1)
 				playerOneRook++;
 			else
 				playerTwoRook++;
 		}
 		else if (result.get() == buttonKnight) {
-			promotedPiece = new PieceKnight(piece.type, piece.xPos, piece.yPos);
-			getChildren().remove(piece.getImage());
-			getChildren().add(promotedPiece.getImage());
-			pieces[piece.xPos][piece.yPos] = promotedPiece;
+			promotedPiece = new Knight (piece.type, piece.row , piece.column );
+			getChildren().remove(piece.getImageView ());
+			getChildren().add(promotedPiece.getImageView ());
+			pieces[piece.row][piece.column] = promotedPiece;
 			if (piece.type == 1)
 				playerOneKnight++;
 			else
 				playerTwoKnight++;
 		}
 		else if (result.get() == buttonBishop) {
-			promotedPiece = new PieceBishop(piece.type, piece.xPos, piece.yPos);
-			getChildren().remove(piece.getImage());
-			getChildren().add(promotedPiece.getImage());
-			pieces[piece.xPos][piece.yPos] = promotedPiece;
+			promotedPiece = new Bishop (piece.type, piece.row , piece.column );
+			getChildren().remove(piece.getImageView ());
+			getChildren().add(promotedPiece.getImageView ());
+			pieces[piece.row][piece.column] = promotedPiece;
 			if (piece.type == 1)
 			{
-				if ((piece.xPos + piece.yPos) % 2 != 0)
+				if ((piece.row + piece.column) % 2 != 0)
 					playerOneBishopDarkSquare++;
 				else
 					playerOneBishopLightSquare++;
 			}
 			else
 			{
-				if ((piece.xPos + piece.yPos) % 2 == 0)
+				if ((piece.row + piece.column) % 2 == 0)
 					playerTwoBishopLightSquare++;
 				else
 					playerTwoBishopDarkSquare++;
 			}
 		}
 		else if (result.get() == buttonQueen) {
-			promotedPiece = new PieceQueen(piece.type, piece.xPos, piece.yPos);
-			getChildren().remove(piece.getImage());
-			getChildren().add(promotedPiece.getImage());
-			pieces[piece.xPos][piece.yPos] = promotedPiece;
+			promotedPiece = new Queen (piece.type, piece.row , piece.column );
+			getChildren().remove(piece.getImageView ());
+			getChildren().add(promotedPiece.getImageView ());
+			pieces[piece.row][piece.column] = promotedPiece;
 			if (piece.type == 1)
 				playerOneQueen++;
 			else
@@ -449,39 +447,39 @@ public class ChessBruh extends Pane {
 	private Window[][] windows;
 
 	// pieceName_color_number
-	private PieceRook rook_2_1; 
-	private PieceKnight knight_2_1;
-	private PieceBishop bishop_2_1;
-	private PieceQueen queen_2; 
-	private PieceKing king_2; 
-	private PieceBishop bishop_2_2;
-	private PieceKnight knight_2_2;
-	private PieceRook rook_2_2;
-	private PiecePawn pawn_2_1;
-	private PiecePawn pawn_2_2;
-	private PiecePawn pawn_2_3;
-	private PiecePawn pawn_2_4;
-	private PiecePawn pawn_2_5;
-	private PiecePawn pawn_2_6;
-	private PiecePawn pawn_2_7;
-	private PiecePawn pawn_2_8;
+	private Rook rook_2_1;
+	private Knight knight_2_1;
+	private Bishop bishop_2_1;
+	private Queen queen_2;
+	private King king_2;
+	private Bishop bishop_2_2;
+	private Knight knight_2_2;
+	private Rook rook_2_2;
+	private Pawn pawn_2_1;
+	private Pawn pawn_2_2;
+	private Pawn pawn_2_3;
+	private Pawn pawn_2_4;
+	private Pawn pawn_2_5;
+	private Pawn pawn_2_6;
+	private Pawn pawn_2_7;
+	private Pawn pawn_2_8;
 	
-	private PieceRook rook_1_1; 
-	private PieceKnight knight_1_1;
-	private PieceBishop bishop_1_1;
-	private PieceQueen queen_1; 
-	private PieceKing king_1; 
-	private PieceBishop bishop_1_2;
-	private PieceKnight knight_1_2;
-	private PieceRook rook_1_2;
-	private PiecePawn pawn_1_1;
-	private PiecePawn pawn_1_2;
-	private PiecePawn pawn_1_3;
-	private PiecePawn pawn_1_4;
-	private PiecePawn pawn_1_5;
-	private PiecePawn pawn_1_6;
-	private PiecePawn pawn_1_7;
-	private PiecePawn pawn_1_8;
+	private Rook rook_1_1;
+	private Knight knight_1_1;
+	private Bishop bishop_1_1;
+	private Queen queen_1;
+	private King king_1;
+	private Bishop bishop_1_2;
+	private Knight knight_1_2;
+	private Rook rook_1_2;
+	private Pawn pawn_1_1;
+	private Pawn pawn_1_2;
+	private Pawn pawn_1_3;
+	private Pawn pawn_1_4;
+	private Pawn pawn_1_5;
+	private Pawn pawn_1_6;
+	private Pawn pawn_1_7;
+	private Pawn pawn_1_8;
 		
 	private Piece selectedPiece = null;
 	

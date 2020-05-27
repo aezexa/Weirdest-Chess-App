@@ -12,8 +12,8 @@ public abstract class Piece extends Group{
 	// Piece can be either white (1) or black (2)
 	protected int type;
 	// Position of the piece on the board
-	protected int xPos;
-	protected int yPos;
+	protected int row;
+	protected int column;
 	// Name of the piece
 	protected String name;
 	// ImageView
@@ -27,11 +27,21 @@ public abstract class Piece extends Group{
 	// Variable to know if the piece can move in a check situation
 	protected boolean isASavior = false;
 	
-	public Piece(int type, int xPos, int yPos) {
+	public Piece(int type, int row, int column) {
 		this.type = type;
-		this.xPos = xPos;
-		this.yPos = yPos;
+		this.row = row;
+		this.column = column;
 		isFirstTime = true;
+	}
+
+	public void setImageProperty() {
+		imageView.setFitHeight ( 75 );
+		imageView.setFitWidth ( 75 );
+		imageView.setLayoutX ( 75* column );
+		imageView.setLayoutY ( 75* row );
+		imageView.setPreserveRatio(true);
+		imageView.setSmooth(true);
+		imageView.setCache(true);
 	}
 	
 	// Select method: When a piece is selected by a first click
@@ -42,58 +52,58 @@ public abstract class Piece extends Group{
 	// Move method: When a piece is already selected and that the player click on a highlighted position
 	// Change the position of the piece and update the board
 	public void MovePiece( ChessBruh chessBruh , int x, int y) {
-		chessBruh.setBoard(this.xPos, this.yPos, 0);
-		chessBruh.setPiece(this.xPos, this.yPos, null);
+		chessBruh.setBoard(this.row , this.column , 0);
+		chessBruh.setPiece(this.row , this.column , null);
 		if (!chessBruh.checkState && this.canCastle( chessBruh )!=0){
 			if(this.canCastle( chessBruh )==1){
 				chessBruh.setBoard(x-1, y, this.type);
 				chessBruh.setPiece(x-1, y, this);
-				this.xPos = x - 1;
+				this.row = x - 1;
 				chessBruh.setBoard(5, y, chessBruh.getPiece(7, y).type);
 				chessBruh.setPiece(5, y, chessBruh.getPiece(7, y));
-				chessBruh.getPiece(7, y).xPos = 7;
+				chessBruh.getPiece(7, y).row = 7;
 				chessBruh.setBoard(7, y, 0);
 				chessBruh.setPiece(7, y, null);
 			}
 			if(this.canCastle( chessBruh )==2){
 				chessBruh.setBoard(x+2, y, this.type);
 				chessBruh.setPiece(x+2, y, this);
-				this.xPos = x + 2;
+				this.row = x + 2;
 				chessBruh.setBoard(3, y, chessBruh.getPiece(0, y).type);
 				chessBruh.setPiece(3, y, chessBruh.getPiece(0, y));
-				chessBruh.getPiece(3, y).xPos = 3;
+				chessBruh.getPiece(3, y).row = 3;
 				chessBruh.setBoard(0, y, 0);
 				chessBruh.setPiece(0, y, null);
 			}
 			if(this.canCastle( chessBruh )==3){
 				chessBruh.setBoard(x-1, y, this.type);
 				chessBruh.setPiece(x-1, y, this);
-				this.xPos = x - 1;
+				this.row = x - 1;
 				chessBruh.setBoard(5, y, chessBruh.getPiece(7, y).type);
 				chessBruh.setPiece(5, y, chessBruh.getPiece(7, y));
-				chessBruh.getPiece(5, y).xPos = 5;
+				chessBruh.getPiece(5, y).row = 5;
 				chessBruh.setBoard(7, y, 0);
 				chessBruh.setPiece(7, y, null);
 			}
 			if(this.canCastle( chessBruh )==4){
 				chessBruh.setBoard(x+2, y, this.type);
 				chessBruh.setPiece(x+2, y, this);
-				this.xPos = x + 2;
+				this.row = x + 2;
 				chessBruh.setBoard(3, y, chessBruh.getPiece(0, y).type);
 				chessBruh.setPiece(3, y, chessBruh.getPiece(0, y));
-				chessBruh.getPiece(3, y).xPos = 3;
+				chessBruh.getPiece(3, y).row = 3;
 				chessBruh.setBoard(0, y, 0);
 				chessBruh.setPiece(0, y, null);
 			}
 		}
 		else{
-			this.xPos = x;
-			this.yPos = y;
+			this.row = x;
+			this.column = y;
 			if ( chessBruh.getPiece(x, y) != null)
 				chessBruh.getPiece(x, y).capture( chessBruh );
 			chessBruh.setBoard(x, y, this.type);
 			chessBruh.setPiece(x, y, this);
-			if (this.name == "Pawn" && ((this.type == 1 && this.yPos == 0) || (this.type == 2 && this.yPos == 7)))
+			if (this.name == "Pawn" && ((this.type == 1 && this.column == 0) || (this.type == 2 && this.column == 7)))
 			{
 				chessBruh.createPromotePiece(this);
 				if (this.type == 1)
@@ -105,7 +115,7 @@ public abstract class Piece extends Group{
 	}
 	
 	// Return the image of the piece
-	public ImageView getImage() {
+	public ImageView getImageView () {
 		return (imageView);
 	}
 	
@@ -146,9 +156,9 @@ public abstract class Piece extends Group{
 				chessBruh.playerOneQueen--;
 			else if (this.name == "Pawn")
 				chessBruh.playerOnePawn--;
-			else if (this.name == "Bishop" && (this.xPos + this.yPos) % 2 != 0)
+			else if (this.name == "Bishop" && (this.row + this.column) % 2 != 0)
 				chessBruh.playerOneBishopDarkSquare--;
-			else if (this.name == "Bishop" && (this.xPos + this.yPos) % 2 == 0)
+			else if (this.name == "Bishop" && (this.row + this.column) % 2 == 0)
 				chessBruh.playerOneBishopLightSquare--;
 		}
 		else
@@ -161,12 +171,12 @@ public abstract class Piece extends Group{
 				chessBruh.playerTwoQueen--;
 			else if (this.name == "Pawn")
 				chessBruh.playerTwoPawn--;
-			else if (this.name == "Bishop" && (this.xPos + this.yPos) % 2 == 0)
+			else if (this.name == "Bishop" && (this.row + this.column) % 2 == 0)
 				chessBruh.playerTwoBishopLightSquare--;
-			else if (this.name == "Bishop" && (this.xPos + this.yPos) % 2 != 0)
+			else if (this.name == "Bishop" && (this.row + this.column) % 2 != 0)
 				chessBruh.playerTwoBishopDarkSquare--;
 		}
-		chessBruh.getChildren().remove(this.getImage());
+		chessBruh.getChildren().remove(this.getImageView ());
 	}
 	
 	public int canCastle( ChessBruh chessBruh ){
@@ -200,11 +210,11 @@ public abstract class Piece extends Group{
 	}
 	
 	public int getX(){
-		return this.xPos;
+		return this.row;
 	}
 	
 	public int getY(){
-		return this.yPos;
+		return this.column;
 	}
 	
 

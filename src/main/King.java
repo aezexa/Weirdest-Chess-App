@@ -3,7 +3,7 @@ package main;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-public class PieceKing extends Piece{
+public class King extends Piece{
 
 
 //	private int xPos;
@@ -12,33 +12,21 @@ public class PieceKing extends Piece{
 	private Image image;
 //	private ImageView imageView = new ImageView();
 	
-	public PieceKing(int type, int xPos, int yPos) {
-		super(type, xPos, yPos);
+	public King ( int type, int row, int column) {
+		super(type, row, column);
 		name = "King";
 		// TODO Auto-generated constructor stub
-		
-		if(type==1){
-			image = new Image("file:src/ChessPiece/White_King.png");
-			imageView.setImage(image);
-			imageView.fitHeightProperty();
-			imageView.fitWidthProperty();
-	        imageView.setPreserveRatio(true);
-	        imageView.setSmooth(true);
-	        imageView.setCache(true);
-		}
-		else{
-			image = new Image("file:src/ChessPiece/Black_King.png");
-			imageView.setImage(image);
-			imageView.fitHeightProperty();
-			imageView.fitWidthProperty();
-	        imageView.setPreserveRatio(true);
-	        imageView.setSmooth(true);
-	        imageView.setCache(true);
-		}
+
+		if ( type == 0 )
+			image = new Image ( "/resources/White_King.png" );
+		else
+			image = new Image ( "/resources/Black_King.png" );
+		imageView.setImage ( image );
+		super.setImageProperty ( );
 	}
 	
 	@Override
-	public ImageView getImage() {
+	public ImageView getImageView () {
 		return (imageView);
 	}
 	
