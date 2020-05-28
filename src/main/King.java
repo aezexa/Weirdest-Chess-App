@@ -12,12 +12,12 @@ public class King extends Piece{
 	private Image image;
 //	private ImageView imageView = new ImageView();
 	
-	public King ( int type, int row, int column) {
-		super(type, row, column);
+	public King ( User user, int row, int column) {
+		super(user, row, column);
 		name = "King";
 		// TODO Auto-generated constructor stub
 
-		if ( type == 0 )
+		if ( user == User.getWhiteUser () )
 			image = new Image ( "/resources/White_King.png" );
 		else
 			image = new Image ( "/resources/Black_King.png" );
@@ -56,30 +56,30 @@ public class King extends Piece{
 //	}
 	
 	
-	public int canCastle( ChessBruh chessBruh ){
-		int canCastle =0;
-		//Black 
-		//shortCastle (5 and 6 empty) 
-		if(type==2 && this.isFirstTime && chessBruh.getBoardPosition(5, 0) == 0 && chessBruh.getBoardPosition(6, 0) == 0 && chessBruh.getPiece(7, 0) != null && chessBruh.getPiece(7, 0).isFirstTime){
-			canCastle = 1;
-			chessBruh.colorSquare(7, 0, false);
-		}
-		//longCastle (1 2 3 empty)
-		if(type==2 && this.isFirstTime && chessBruh.getBoardPosition(1, 0) == 0 && chessBruh.getBoardPosition(2, 0) == 0 && chessBruh.getBoardPosition(3, 0) == 0 && chessBruh.getPiece(0, 0) != null && chessBruh.getPiece(0, 0).isFirstTime){
-			canCastle = 2;
-			chessBruh.colorSquare(0, 0, false);
-		}
-		// White
-		//shortCastle (5 and 6 empty) 
-		if(type==1 && this.isFirstTime && chessBruh.getBoardPosition(5, 7) == 0 && chessBruh.getBoardPosition(6, 7) == 0 && chessBruh.getPiece(7, 7) != null && chessBruh.getPiece(7, 7).isFirstTime){
-			canCastle = 3;
-			chessBruh.colorSquare(7, 7, false);
-		}
-		//longCastle (1 2 3 empty)
-		if(type==1 && this.isFirstTime && chessBruh.getBoardPosition(1, 7) == 0 && chessBruh.getBoardPosition(2, 7) == 0 && chessBruh.getBoardPosition(3, 7) == 0 && chessBruh.getPiece(0, 7) != null && chessBruh.getPiece(0, 7).isFirstTime){
-			canCastle = 4;
-			chessBruh.colorSquare(0, 7, false);
-		}
-		return canCastle; 
-	}
+//	public int canCastle( ChessBruh chessBruh ){
+//		int canCastle =0;
+//		//Black
+//		//shortCastle (5 and 6 empty)
+//		if(type==2 && this.isFirstTime && chessBruh.getBoardPosition(5, 0) == 0 && chessBruh.getBoardPosition(6, 0) == 0 && chessBruh.getPiece(7, 0) != null && chessBruh.getPiece(7, 0).isFirstTime){
+//			canCastle = 1;
+//			chessBruh.colorSquare(7, 0, false);
+//		}
+//		//longCastle (1 2 3 empty)
+//		if(type==2 && this.isFirstTime && chessBruh.getBoardPosition(1, 0) == 0 && chessBruh.getBoardPosition(2, 0) == 0 && chessBruh.getBoardPosition(3, 0) == 0 && chessBruh.getPiece(0, 0) != null && chessBruh.getPiece(0, 0).isFirstTime){
+//			canCastle = 2;
+//			chessBruh.colorSquare(0, 0, false);
+//		}
+//		// White
+//		//shortCastle (5 and 6 empty)
+//		if(type==1 && this.isFirstTime && chessBruh.getBoardPosition(5, 7) == 0 && chessBruh.getBoardPosition(6, 7) == 0 && chessBruh.getPiece(7, 7) != null && chessBruh.getPiece(7, 7).isFirstTime){
+//			canCastle = 3;
+//			chessBruh.colorSquare(7, 7, false);
+//		}
+//		//longCastle (1 2 3 empty)
+//		if(type==1 && this.isFirstTime && chessBruh.getBoardPosition(1, 7) == 0 && chessBruh.getBoardPosition(2, 7) == 0 && chessBruh.getBoardPosition(3, 7) == 0 && chessBruh.getPiece(0, 7) != null && chessBruh.getPiece(0, 7).isFirstTime){
+//			canCastle = 4;
+//			chessBruh.colorSquare(0, 7, false);
+//		}
+//		return canCastle;
+//	}
 }

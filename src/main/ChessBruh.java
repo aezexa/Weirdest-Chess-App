@@ -50,109 +50,109 @@ public class ChessBruh extends Pane {
 
 		// set the current player to white
 		current_player = PlayerWhite;
-		initPiece();
+//		initPiece();
 	}
 		
-	public void initPiece()
-	{
-		// Initialize the pieces and put it on the board
-		// BLACK Pieces
-		rook_2_1 = new Rook (2, 0, 0);
-		knight_2_1 = new Knight (2, 1, 0);
-		bishop_2_1 = new Bishop (2, 2, 0);
-		queen_2 = new Queen (2, 3, 0);
-		king_2 = new King (2, 4, 0);
-		bishop_2_2 = new Bishop (2, 5, 0);
-		knight_2_2 = new Knight (2, 6, 0);
-		rook_2_2 = new Rook (2, 7, 0);
-		pawn_2_1 = new Pawn (2, 0, 1);
-		pawn_2_2 = new Pawn (2, 1, 1);
-		pawn_2_3 = new Pawn (2, 2, 1);
-		pawn_2_4 = new Pawn (2, 3, 1);
-		pawn_2_5 = new Pawn (2, 4, 1);
-		pawn_2_6 = new Pawn (2, 5, 1);
-		pawn_2_7 = new Pawn (2, 6, 1);
-		pawn_2_8 = new Pawn (2, 7, 1);
-		
-		//WHITE Pieces
-		rook_1_1 = new Rook (1, 0, 7);
-		knight_1_1 = new Knight (1, 1, 7);
-		bishop_1_1 = new Bishop (1, 2, 7);
-		queen_1 = new Queen (1, 3, 7);
-		king_1 = new King (1, 4, 7);
-		bishop_1_2 = new Bishop (1, 5, 7);
-		knight_1_2 = new Knight (1, 6, 7);
-		rook_1_2 = new Rook (1, 7, 7);
-		pawn_1_1 = new Pawn (1, 0, 6);
-		pawn_1_2 = new Pawn (1, 1, 6);
-		pawn_1_3 = new Pawn (1, 2, 6);
-		pawn_1_4 = new Pawn (1, 3, 6);
-		pawn_1_5 = new Pawn (1, 4, 6);
-		pawn_1_6 = new Pawn (1, 5, 6);
-		pawn_1_7 = new Pawn (1, 6, 6);
-		pawn_1_8 = new Pawn (1, 7, 6);
-		
-		pieces[0][0] = rook_2_1;
-		pieces[1][0] = knight_2_1;
-		pieces[2][0] = bishop_2_1;
-		pieces[3][0] = queen_2;
-		pieces[4][0] = king_2;
-		pieces[5][0] = bishop_2_2;
-		pieces[6][0] = knight_2_2;
-		pieces[7][0] = rook_2_2;
-		
-		pieces[0][1] = pawn_2_1;
-		pieces[1][1] = pawn_2_2;
-		pieces[2][1] = pawn_2_3;
-		pieces[3][1] = pawn_2_4;
-		pieces[4][1] = pawn_2_5;
-		pieces[5][1] = pawn_2_6;
-		pieces[6][1] = pawn_2_7;
-		pieces[7][1] = pawn_2_8;
-		
-		for (int y = 2; y < 6; y++)
-		{
-			for (int x = 0; x < boardWidth; x++)
-			{
-				pieces[x][y] = null;
-			}
-		}
-		
-		pieces[0][6] = pawn_1_1;
-		pieces[1][6] = pawn_1_2;
-		pieces[2][6] = pawn_1_3;
-		pieces[3][6] = pawn_1_4;
-		pieces[4][6] = pawn_1_5;
-		pieces[5][6] = pawn_1_6;
-		pieces[6][6] = pawn_1_7;
-		pieces[7][6] = pawn_1_8;
-
-		pieces[0][7] = rook_1_1;
-		pieces[1][7] = knight_1_1;
-		pieces[2][7] = bishop_1_1;
-		pieces[3][7] = queen_1;
-		pieces[4][7] = king_1;
-		pieces[5][7] = bishop_1_2;
-		pieces[6][7] = knight_1_2;
-		pieces[7][7] = rook_1_2;
-		
-		for (int y = 0; y < boardHeight; y++)
-		{
-			for (int x = 0; x < boardWidth; x++)
-			{
-				if (y == 0 || y == 1)
-					board[x][y] = 2;
-				else if (y == 6 || y == 7)
-					board[x][y] = 1;
-				else
-					board[x][y] = 0;
-			}
-		}
-
-		for(int i = 0; i < 8; i++){
-			getChildren().addAll(pieces[i][0].getImageView (), pieces[i][1].getImageView (), pieces[i][6].getImageView (), pieces[i][7].getImageView ());
-		}
-	}
+//	public void initPiece()
+//	{
+//		// Initialize the pieces and put it on the board
+//		// BLACK Pieces
+//		rook_2_1 = new Rook (2, 0, 0);
+//		knight_2_1 = new Knight (2, 1, 0);
+//		bishop_2_1 = new Bishop (2, 2, 0);
+//		queen_2 = new Queen (2, 3, 0);
+//		king_2 = new King (2, 4, 0);
+//		bishop_2_2 = new Bishop (2, 5, 0);
+//		knight_2_2 = new Knight (2, 6, 0);
+//		rook_2_2 = new Rook (2, 7, 0);
+//		pawn_2_1 = new Pawn (2, 0, 1);
+//		pawn_2_2 = new Pawn (2, 1, 1);
+//		pawn_2_3 = new Pawn (2, 2, 1);
+//		pawn_2_4 = new Pawn (2, 3, 1);
+//		pawn_2_5 = new Pawn (2, 4, 1);
+//		pawn_2_6 = new Pawn (2, 5, 1);
+//		pawn_2_7 = new Pawn (2, 6, 1);
+//		pawn_2_8 = new Pawn (2, 7, 1);
+//
+//		//WHITE Pieces
+//		rook_1_1 = new Rook (1, 0, 7);
+//		knight_1_1 = new Knight (1, 1, 7);
+//		bishop_1_1 = new Bishop (1, 2, 7);
+//		queen_1 = new Queen (1, 3, 7);
+//		king_1 = new King (1, 4, 7);
+//		bishop_1_2 = new Bishop (1, 5, 7);
+//		knight_1_2 = new Knight (1, 6, 7);
+//		rook_1_2 = new Rook (1, 7, 7);
+//		pawn_1_1 = new Pawn (1, 0, 6);
+//		pawn_1_2 = new Pawn (1, 1, 6);
+//		pawn_1_3 = new Pawn (1, 2, 6);
+//		pawn_1_4 = new Pawn (1, 3, 6);
+//		pawn_1_5 = new Pawn (1, 4, 6);
+//		pawn_1_6 = new Pawn (1, 5, 6);
+//		pawn_1_7 = new Pawn (1, 6, 6);
+//		pawn_1_8 = new Pawn (1, 7, 6);
+//
+//		pieces[0][0] = rook_2_1;
+//		pieces[1][0] = knight_2_1;
+//		pieces[2][0] = bishop_2_1;
+//		pieces[3][0] = queen_2;
+//		pieces[4][0] = king_2;
+//		pieces[5][0] = bishop_2_2;
+//		pieces[6][0] = knight_2_2;
+//		pieces[7][0] = rook_2_2;
+//
+//		pieces[0][1] = pawn_2_1;
+//		pieces[1][1] = pawn_2_2;
+//		pieces[2][1] = pawn_2_3;
+//		pieces[3][1] = pawn_2_4;
+//		pieces[4][1] = pawn_2_5;
+//		pieces[5][1] = pawn_2_6;
+//		pieces[6][1] = pawn_2_7;
+//		pieces[7][1] = pawn_2_8;
+//
+//		for (int y = 2; y < 6; y++)
+//		{
+//			for (int x = 0; x < boardWidth; x++)
+//			{
+//				pieces[x][y] = null;
+//			}
+//		}
+//
+//		pieces[0][6] = pawn_1_1;
+//		pieces[1][6] = pawn_1_2;
+//		pieces[2][6] = pawn_1_3;
+//		pieces[3][6] = pawn_1_4;
+//		pieces[4][6] = pawn_1_5;
+//		pieces[5][6] = pawn_1_6;
+//		pieces[6][6] = pawn_1_7;
+//		pieces[7][6] = pawn_1_8;
+//
+//		pieces[0][7] = rook_1_1;
+//		pieces[1][7] = knight_1_1;
+//		pieces[2][7] = bishop_1_1;
+//		pieces[3][7] = queen_1;
+//		pieces[4][7] = king_1;
+//		pieces[5][7] = bishop_1_2;
+//		pieces[6][7] = knight_1_2;
+//		pieces[7][7] = rook_1_2;
+//
+//		for (int y = 0; y < boardHeight; y++)
+//		{
+//			for (int x = 0; x < boardWidth; x++)
+//			{
+//				if (y == 0 || y == 1)
+//					board[x][y] = 2;
+//				else if (y == 6 || y == 7)
+//					board[x][y] = 1;
+//				else
+//					board[x][y] = 0;
+//			}
+//		}
+//
+//		for(int i = 0; i < 8; i++){
+//			getChildren().addAll(pieces[i][0].getImageView (), pieces[i][1].getImageView (), pieces[i][6].getImageView (), pieces[i][7].getImageView ());
+//		}
+//	}
 
 	// resize method
 	@Override
@@ -196,7 +196,7 @@ public class ChessBruh extends Pane {
 			}
 		}
 		current_player = PlayerWhite;
-		initPiece();
+//		initPiece();
 		for(int i = 0; i < 8; i++){
 			pieces[i][0].resetPiece();
 			pieces[i][1].resetPiece();
@@ -311,74 +311,74 @@ public class ChessBruh extends Pane {
 //		}
 //	}
 	
-	public void createPromotePiece(Piece piece)
-	{
-		Piece promotedPiece;
-		        
-		alert = new Alert(AlertType.CONFIRMATION);
-		alert.setTitle("Promote a piece");
-		alert.setHeaderText("You can promote your pawn into another piece");
-		alert.setContentText("Choose one of the following piece");
-
-		ButtonType buttonRook = new ButtonType("Rook");
-		ButtonType buttonKnight = new ButtonType("Knight");
-		ButtonType buttonBishop = new ButtonType("Bishop");
-		ButtonType buttonQueen = new ButtonType("Queen");
-
-		alert.getButtonTypes().setAll(buttonRook, buttonKnight, buttonBishop, buttonQueen);
-
-		Optional<ButtonType> result = alert.showAndWait();
-		if (result.get() == buttonRook){
-			promotedPiece = new Rook (piece.type, piece.row , piece.column );
-			getChildren().remove(piece.getImageView ());
-			getChildren().add(promotedPiece.getImageView ());
-			pieces[piece.row][piece.column] = promotedPiece;
-			if (piece.type == 1)
-				playerOneRook++;
-			else
-				playerTwoRook++;
-		}
-		else if (result.get() == buttonKnight) {
-			promotedPiece = new Knight (piece.type, piece.row , piece.column );
-			getChildren().remove(piece.getImageView ());
-			getChildren().add(promotedPiece.getImageView ());
-			pieces[piece.row][piece.column] = promotedPiece;
-			if (piece.type == 1)
-				playerOneKnight++;
-			else
-				playerTwoKnight++;
-		}
-		else if (result.get() == buttonBishop) {
-			promotedPiece = new Bishop (piece.type, piece.row , piece.column );
-			getChildren().remove(piece.getImageView ());
-			getChildren().add(promotedPiece.getImageView ());
-			pieces[piece.row][piece.column] = promotedPiece;
-			if (piece.type == 1)
-			{
-				if ((piece.row + piece.column) % 2 != 0)
-					playerOneBishopDarkSquare++;
-				else
-					playerOneBishopLightSquare++;
-			}
-			else
-			{
-				if ((piece.row + piece.column) % 2 == 0)
-					playerTwoBishopLightSquare++;
-				else
-					playerTwoBishopDarkSquare++;
-			}
-		}
-		else if (result.get() == buttonQueen) {
-			promotedPiece = new Queen (piece.type, piece.row , piece.column );
-			getChildren().remove(piece.getImageView ());
-			getChildren().add(promotedPiece.getImageView ());
-			pieces[piece.row][piece.column] = promotedPiece;
-			if (piece.type == 1)
-				playerOneQueen++;
-			else
-				playerTwoQueen++;
-		}
-	}
+//	public void createPromotePiece(Piece piece)
+//	{
+//		Piece promotedPiece;
+//
+//		alert = new Alert(AlertType.CONFIRMATION);
+//		alert.setTitle("Promote a piece");
+//		alert.setHeaderText("You can promote your pawn into another piece");
+//		alert.setContentText("Choose one of the following piece");
+//
+//		ButtonType buttonRook = new ButtonType("Rook");
+//		ButtonType buttonKnight = new ButtonType("Knight");
+//		ButtonType buttonBishop = new ButtonType("Bishop");
+//		ButtonType buttonQueen = new ButtonType("Queen");
+//
+//		alert.getButtonTypes().setAll(buttonRook, buttonKnight, buttonBishop, buttonQueen);
+//
+//		Optional<ButtonType> result = alert.showAndWait();
+//		if (result.get() == buttonRook){
+//			promotedPiece = new Rook (piece.type, piece.row , piece.column );
+//			getChildren().remove(piece.getImageView ());
+//			getChildren().add(promotedPiece.getImageView ());
+//			pieces[piece.row][piece.column] = promotedPiece;
+//			if (piece.type == 1)
+//				playerOneRook++;
+//			else
+//				playerTwoRook++;
+//		}
+//		else if (result.get() == buttonKnight) {
+//			promotedPiece = new Knight (piece.type, piece.row , piece.column );
+//			getChildren().remove(piece.getImageView ());
+//			getChildren().add(promotedPiece.getImageView ());
+//			pieces[piece.row][piece.column] = promotedPiece;
+//			if (piece.type == 1)
+//				playerOneKnight++;
+//			else
+//				playerTwoKnight++;
+//		}
+//		else if (result.get() == buttonBishop) {
+//			promotedPiece = new Bishop (piece.type, piece.row , piece.column );
+//			getChildren().remove(piece.getImageView ());
+//			getChildren().add(promotedPiece.getImageView ());
+//			pieces[piece.row][piece.column] = promotedPiece;
+//			if (piece.type == 1)
+//			{
+//				if ((piece.row + piece.column) % 2 != 0)
+//					playerOneBishopDarkSquare++;
+//				else
+//					playerOneBishopLightSquare++;
+//			}
+//			else
+//			{
+//				if ((piece.row + piece.column) % 2 == 0)
+//					playerTwoBishopLightSquare++;
+//				else
+//					playerTwoBishopDarkSquare++;
+//			}
+//		}
+//		else if (result.get() == buttonQueen) {
+//			promotedPiece = new Queen (piece.type, piece.row , piece.column );
+//			getChildren().remove(piece.getImageView ());
+//			getChildren().add(promotedPiece.getImageView ());
+//			pieces[piece.row][piece.column] = promotedPiece;
+//			if (piece.type == 1)
+//				playerOneQueen++;
+//			else
+//				playerTwoQueen++;
+//		}
+//	}
 	
 	public void colorSquare(int x, int y, boolean selectedPiece) {
 		if (selectedPiece)

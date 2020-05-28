@@ -11,11 +11,11 @@ public class Knight extends Piece{
 	private Image image;
 //	private ImageView imageView = new ImageView(); 
 	
-	public Knight ( int type, int row, int column) {
-		super(type, row, column);
+	public Knight ( User user, int row, int column) {
+		super(user, row, column);
 		name = "Knight";
 		// TODO Auto-generated constructor stub
-		if ( type == 0 )
+		if ( user == User.getWhiteUser () )
 			image = new Image ( "/resources/White_Knight.png" );
 		else
 			image = new Image ( "/resources/Black_Knight.png" );
@@ -27,8 +27,14 @@ public class Knight extends Piece{
 	public ImageView getImageView () {
 		return (imageView);
 	}
-	
-//	@Override
+
+	@Override
+	public boolean canMove (int rowStart, int rowEnd, int columnStart, int columnEnd) {
+		return (Math.abs ( rowStart - rowEnd ) == 2 && Math.abs ( columnStart - columnEnd ) == 1)
+				|| (Math.abs ( rowStart - rowEnd ) == 1 && Math.abs ( columnStart - columnEnd ) == 2);
+	}
+
+	//	@Override
 //	public void SelectPiece(ChessBoard chessBoard) {
 //		int x = 0;
 //		chessBoard.colorSquare(this.xPos, this.yPos, true);

@@ -11,14 +11,14 @@ public class Bishop extends Piece{
 	private Image image;
 //	private ImageView imageView = new ImageView();
 
-	public Bishop ( int type, int row, int column) {
-		super(type, row, column);
+	public Bishop ( User user, int row, int column) {
+		super(user, row, column);
 		name = "Bishop";
 //		this.type = type;
 //		this.row = row;
 //		this.column = column;
 		// TODO Auto-generated constructor stub
-		if ( type == 0 )
+		if ( user == User.getWhiteUser () )
 			image = new Image ( "/resources/White_Bishop.png" );
 		else
 			image = new Image ( "/resources/Black_Bishop.png" );

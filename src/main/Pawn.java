@@ -11,12 +11,12 @@ public class Pawn extends Piece{
 	private Image image;
 //	private ImageView imageView = new ImageView(); 
 	
-	public Pawn ( int type, int row, int column) {
-		super(type, row, column);
+	public Pawn ( User user, int row, int column) {
+		super(user, row, column);
 		name = "Pawn";
 		// TODO Auto-generated constructor stub
 		// TODO tester les paramètres 
-		if ( type == 0 )
+		if ( user == User.getWhiteUser () )
 			image = new Image ( "/resources/White_Pawn.png" );
 		else
 			image = new Image ( "/resources/Black_Pawn.png" );
@@ -29,7 +29,7 @@ public class Pawn extends Piece{
 		return (imageView);
 	}
 
-//	@Override
+	//	@Override
 //	public void SelectPiece(ChessBoard chessBoard) {
 //		chessBoard.colorSquare(this.xPos, this.yPos, true);
 //		if (chessBoard.checkState && !this.isASavior)

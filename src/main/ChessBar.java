@@ -66,6 +66,11 @@ public class ChessBar extends HBox {
         getChildren ().add ( barScreen );
 
     }
+
+    public void setTurn (String username) {
+        turn.setText ( username );
+    }
+
     public Label turn;
     public Label timer;
     private GridPane barScreen;

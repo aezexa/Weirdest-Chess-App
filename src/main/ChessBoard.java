@@ -1,9 +1,6 @@
 package main;
 
-import javafx.event.EventHandler;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.input.MouseDragEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -11,6 +8,8 @@ import javafx.scene.shape.StrokeType;
 import javafx.scene.transform.Translate;
 
 import static main.App.*;
+import static main.User.getWhiteUser;
+import static main.User.getBlackUser;
 
 public class ChessBoard extends Pane {
 
@@ -21,18 +20,24 @@ public class ChessBoard extends Pane {
     public final double tileWidth = (double) BORDER_WIDTH / tileNum;
     public final double tileHeight = (double) BORDER_HEIGHT / tileNum;
     private Tile[][] board;
-    private int selectedRow;
-    private int selectedColumn;
+    private int endRow;
+    private int endColumn;
     boolean isPieceSelected;
-    private int selectedPieceRow;
-    private int selectedPieceColumn;
+    private int startRow;
+    private int startColumn;
+    boolean hasMoved;
+    boolean prevOppositeTurnOwnership;
+    boolean hadKill;
+    boolean gameOver;
+    boolean isCheckMate;
+    ChessBar chessBar;
 
     public ChessBoard (ChessBar chessBar) {
         this.setLayoutX ( 0 );
         this.setLayoutY ( 0 );
         this.setPrefHeight ( 600.0 );
         this.setPrefWidth ( 600.0 );
-
+        this.chessBar = chessBar;
         initializeGame ();
 
     }
@@ -41,6 +46,15 @@ public class ChessBoard extends Pane {
 
         inGame = true;
         board = new Tile[8][8];
+
+        User.setWhiteUser ( new User ( "Alireza", "1" ) );
+        User.setBlackUser ( new User ( "Alireza's Enemy", "1" ) );
+        User.getWhiteUser ().setTurn ( true );
+        User.getBlackUser ().setTurn ( false );
+        setFirstOwnership ( );
+
+        chessBar.setTurn ( User.getWhiteUser ().getName () );
+
 
         int tileNum = 8;
 
@@ -55,35 +69,35 @@ public class ChessBoard extends Pane {
 
         //0 means white
         for (int i = 0; i < 8; i++) {
-            board[1][i].setPiece ( new Pawn (1 , 1 , i) );
-            board[6][i].setPiece ( new Pawn ( 0 , 6 , i ) );
+            board[1][i].setPiece ( new Pawn ( getBlackUser () , 1 , i) );
+            board[6][i].setPiece ( new Pawn ( getWhiteUser () , 6 , i ) );
         }
 
         //Rooks
-        board[0][0].setPiece ( new Rook ( 1 , 0 ,0 ) );
-        board[0][7].setPiece ( new Rook ( 1 , 0 ,7 ) );
-        board[7][0].setPiece ( new Rook ( 0 , 7 ,0 ) );
-        board[7][7].setPiece ( new Rook ( 0 , 7 ,7 ) );
+        board[0][0].setPiece ( new Rook ( getBlackUser () , 0 ,0 ) );
+        board[0][7].setPiece ( new Rook ( getBlackUser () , 0 ,7 ) );
+        board[7][0].setPiece ( new Rook ( getWhiteUser () , 7 ,0 ) );
+        board[7][7].setPiece ( new Rook ( getWhiteUser () , 7 ,7 ) );
 
         //Knight
-        board[0][1].setPiece ( new Knight ( 1 ,0,1 ) );
-        board[0][6].setPiece ( new Knight ( 1,0,6 ) );
-        board[7][1].setPiece ( new Knight ( 0,7,1 ) );
-        board[7][6].setPiece ( new Knight ( 0,7,6 ) );
+        board[0][1].setPiece ( new Knight ( getBlackUser () ,0,1 ) );
+        board[0][6].setPiece ( new Knight ( getBlackUser (),0,6 ) );
+        board[7][1].setPiece ( new Knight ( getWhiteUser (),7,1 ) );
+        board[7][6].setPiece ( new Knight ( getWhiteUser (),7,6 ) );
 
         //Bishop
-        board[0][2].setPiece ( new Bishop ( 1,0,2 ) );
-        board[0][5].setPiece ( new Bishop ( 1,0,5 ) );
-        board[7][2].setPiece ( new Bishop ( 0,7,2 ) );
-        board[7][5].setPiece ( new Bishop ( 0,7,5 ) );
+        board[0][2].setPiece ( new Bishop ( getBlackUser (),0,2 ) );
+        board[0][5].setPiece ( new Bishop ( getBlackUser (),0,5 ) );
+        board[7][2].setPiece ( new Bishop ( getWhiteUser (),7,2 ) );
+        board[7][5].setPiece ( new Bishop ( getWhiteUser (),7,5 ) );
 
         //King
-        board[0][3].setPiece ( new King ( 1,0,3 ) );
-        board[7][3].setPiece ( new King ( 0,7,3 ) );
+        board[0][3].setPiece ( new King ( getBlackUser (),0,3 ) );
+        board[7][3].setPiece ( new King ( getWhiteUser (),7,3 ) );
 
         //Queen
-        board[0][4].setPiece ( new Queen ( 1,0,4 ) );
-        board[7][4].setPiece ( new Queen ( 0,7,4 ) );
+        board[0][4].setPiece ( new Queen ( getBlackUser (),0,4 ) );
+        board[7][4].setPiece ( new Queen ( getWhiteUser (),7,4 ) );
 
         for (int row = 0; row < 8; row++)
             for (int column = 0; column < 8; column++)
@@ -112,10 +126,6 @@ public class ChessBoard extends Pane {
 //        Variables.blackUser.setTurn ( false );
 //        Variables.whiteUser.clearMoveAndKillHistory ( );
 //        Variables.blackUser.clearMoveAndKillHistory ( );
-//
-        User.setWhiteUser ( new User ( "Alireza", "1" ) );
-        User.setBlackUser ( new User ( "Alireza's Enemy", "1" ) );
-        setFirstOwnership ( );
 
         mouseDragOption ();
 
@@ -124,13 +134,13 @@ public class ChessBoard extends Pane {
     private static void setFirstOwnership () {
         for (int row = 0; row <= 1; row++)
             for (int column = 0; column < 8; column++) {
-                User.getWhiteUser ().setUserOwnsSquare ( row , column , true );
-                User.getBlackUser ().setUserOwnsSquare ( 7 - row , column , true );
+                User.getWhiteUser ().setUserOwnsSquare ( 7 - row , column , true );
+                User.getBlackUser ().setUserOwnsSquare ( row , column , true );
             }
         for (int row = 2; row < 8; row++)
             for (int column = 0; column < 8; column++) {
-                User.getWhiteUser ().setUserOwnsSquare ( row , column , false );
-                User.getBlackUser ().setUserOwnsSquare ( 7 - row , column , false );
+                User.getWhiteUser ().setUserOwnsSquare ( 7 - row , column , false );
+                User.getBlackUser ().setUserOwnsSquare ( row , column , false );
             }
     }
 
@@ -147,16 +157,16 @@ public class ChessBoard extends Pane {
 
     public void selectPiece () {
         isPieceSelected = false;
-        if ( !hasSelectErrors ( selectedRow , selectedColumn ) ) {
-            if ( getTurnUser ( ).userOwnsSquare ( selectedRow , selectedColumn ) ) {
+        if ( !hasSelectErrors ( endRow , endColumn ) ) {
+            if ( getTurnUser ( ).userOwnsSquare ( endRow , endColumn ) ) {
                 isPieceSelected = true;
-                selectedPieceRow = selectedRow;
-                selectedPieceColumn = selectedColumn;
+                startRow = endRow;
+                startColumn = endColumn;
             }
         }
     }
 
-    static boolean hasSelectErrors ( int row , int column ) {
+    boolean hasSelectErrors ( int row , int column ) {
 
         if ( getOppositeTurnUser ( ).userOwnsSquare ( row , column ) ) {
             System.out.println ( "you can only select one of your pieces" );
@@ -168,16 +178,175 @@ public class ChessBoard extends Pane {
         return false;
     }
 
-    static User getTurnUser () {
+    User getTurnUser () {
         if ( User.getWhiteUser ().isTurn ( ) )
             return User.getWhiteUser ();
         return User.getBlackUser ();
     }
 
-    static User getOppositeTurnUser () {
+    User getOppositeTurnUser () {
         if ( User.getWhiteUser ().isTurn ( ) )
             return User.getBlackUser ();
         return User.getWhiteUser ();
+    }
+
+    private void changeTurns () {
+        if ( User.getWhiteUser ().isTurn ( ) ) {
+            User.getWhiteUser ().setTurn ( false );
+            User.getBlackUser ().setTurn ( true );
+        } else {
+            User.getWhiteUser ().setTurn ( true );
+            User.getBlackUser ().setTurn ( false );
+        }
+        chessBar.setTurn ( getTurnUser ().getName () );
+    }
+
+    void moveActions () {
+
+        //initializing start and end coordination
+//            startRowBefore = endRow;
+//            startColumnBefore = endColumn;
+//            endRowBefore = row;
+//            endColumnBefore = column;
+
+        //initializing start and end piece name
+//            startNameBefore = board[startRowBefore - 1][startColumnBefore - 1];
+//            endNameBefore = board[endRowBefore - 1][endColumnBefore - 1];
+
+        //if we had a kill
+        if ( getOppositeTurnUser ( ).userOwnsSquare ( endRow , endColumn ) ) {
+            System.out.println ( "rival piece destroyed" );
+
+            //setting booleans
+            prevOppositeTurnOwnership = true;
+            hadKill = true;
+
+            //appending to history
+//                moveStringToAppend = board[selectedRow - 1][selectedColumn - 1] + " " +
+//                        selectedRow + "," + selectedColumn +
+//                        " to " +
+//                        row + "," + column +
+//                        " destroyed " + board[row - 1][column - 1];
+
+//                getTurnUser ( ).addToMoveHistory ( moveStringToAppend );
+//                allUsersMoveHistory.add ( moveStringToAppend );
+
+//                killStringToAppend = board[row - 1][column - 1] + " killed in spot " + row + "," + column;
+
+//                getOppositeTurnUser ( ).addToKillHistory ( killStringToAppend );
+//                allUsersKillHistory.add ( killStringToAppend );
+
+            //if king had been hit
+            if ( board[endRow][endColumn].getPiece () instanceof King ) {
+                gameOver = true;
+            }
+
+        } else { //if we didn't have a kill
+            System.out.println ( "moved" );
+
+            //setting booleans
+            prevOppositeTurnOwnership = false;
+            hadKill = false;
+
+            //appending to history
+//                moveStringToAppend = board[selectedRow - 1][selectedColumn - 1] + " " +
+//                        selectedRow + "," + selectedColumn +
+//                        " to " +
+//                        row + "," + column;
+
+//                getTurnUser ( ).addToMoveHistory ( moveStringToAppend );
+//                allUsersMoveHistory.add ( moveStringToAppend );
+        }
+
+        //setting booleans
+        hasMoved = true;
+
+        //changing board
+//            board[row - 1][column - 1] = board[selectedRow - 1][selectedColumn - 1];
+//            board[selectedRow - 1][selectedColumn - 1] = "  ";
+
+        //change ownership
+        changeOwnershipOfTile ( );
+    }
+
+    private boolean hasMoveErrors ( ) {
+        if ( !getStartTile ().getPiece ().canMove ( startRow , endRow , startColumn , endColumn ) || !isDifferentColor () ) {
+            System.out.println ( "cannot move to the spot" );
+            return true;
+        }
+        return false;
+    }
+
+    boolean isDifferentColor () {
+        if (getEndTile ().getPiece () == null)
+            return true;
+        return getStartTile ().getPiece ().getOwner () != getEndTile ().getPiece ().getOwner ();
+    }
+
+    private void changeOwnershipOfTile ( ) {
+        getTurnUser ( ).setUserOwnsSquare ( startRow , startColumn , false );
+        getTurnUser ( ).setUserOwnsSquare ( endRow , endColumn , true );
+        getOppositeTurnUser ( ).setUserOwnsSquare ( endRow , endColumn , false );
+    }
+
+    void acceptDrag() {
+        board[endRow][endColumn].setPiece ( board[startRow][startColumn].getPiece () );
+        board[startRow][startColumn].setPiece ( null );
+        board[endRow][endColumn].highlightTile ( Color.BLACK );
+        board[endRow][endColumn].getPiece ().getImageView ().setLayoutX ( 75* endColumn + 7.5 );
+        board[endRow][endColumn].getPiece ().getImageView ().setLayoutY ( 75* endRow + 7.5 );
+        hasMoved = true;
+        moveActions ();
+
+        changeTurns ();
+    }
+
+    void declineDrag() {
+        board[startRow][startColumn].getPiece ().getImageView ().setLayoutX ( 75* startColumn + 7.5 );
+        board[startRow][startColumn].getPiece ().getImageView ().setLayoutY ( 75* startRow + 7.5 );
+    }
+
+    void beginDrag() {
+        setOnDragDetected( mouseEvent -> {
+            startFullDrag();
+            System.out.println ( "Event on Source: drag detected + " + endRow + " " + endColumn );
+            startColumn = (int) (mouseEvent.getX ()/tileWidth);
+            startRow = (int) (mouseEvent.getY ()/tileHeight);
+        } );
+
+        setOnMouseDragged( mouseEvent -> {
+            endColumn = (int) (mouseEvent.getX ()/tileWidth);
+            endRow = (int) (mouseEvent.getY ()/tileHeight);
+            System.out.println ( "Event on Source: mouse dragged + " + endRow + " " + endColumn );
+            mouseEvent.setDragDetect(false);
+            if (isPieceHere ()) {
+                board[startRow][startColumn].getPiece ( ).getImageView ( ).setLayoutX ( mouseEvent.getX ( ) - 30 );
+                board[startRow][startColumn].getPiece ( ).getImageView ( ).setLayoutY ( mouseEvent.getY ( ) - 30 );
+            }
+        } );
+
+        setOnMouseReleased( mouseEvent -> {
+            endColumn = (int) (mouseEvent.getX ()/tileWidth);
+            endRow = (int) (mouseEvent.getY ()/tileHeight);
+            setMouseTransparent(false);
+            System.out.println ( "Event on Source: mouse released + " + endRow + " " + endColumn );
+            System.out.println ( "\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014" );
+            unhighlightTiles ();
+            if (isPieceHere ()) {
+                if ( isPieceSelected && !isSameTile ( ) && !hasMoveErrors ( ))
+                    acceptDrag ( );
+                else
+                    declineDrag ( );
+            }
+        } );
+    }
+
+    boolean isSameTile () {
+        return endColumn == startColumn && endRow == startRow;
+    }
+
+    boolean isPieceHere () {
+        return getStartTile ().getPiece () != null;
     }
 
     void mouseDragOption () {
@@ -187,75 +356,55 @@ public class ChessBoard extends Pane {
             setMouseTransparent(true);
             System.out.println ( "Event on Source: mouse pressed" );
 
-            selectedColumn = (int) (mouseEvent.getX ()/tileWidth);
-            selectedRow = (int) (mouseEvent.getY ()/tileHeight);
+            endColumn = (int) (mouseEvent.getX ()/tileWidth);
+            endRow = (int) (mouseEvent.getY ()/tileHeight);
             unhighlightTiles ();
-            board[selectedRow][selectedColumn].highlightTile ( Color.BLACK );
-            System.out.println ( "selected row : " + selectedRow );
-            System.out.println ( "selected column : " + selectedColumn );
-            System.out.println ( "selected piece : " + board[selectedRow][selectedColumn].getPiece () );
+            getEndTile ().highlightTile ( Color.BLACK );
+            System.out.println ( "selected row : " + endRow );
+            System.out.println ( "selected column : " + endColumn );
+            System.out.println ( "selected piece : " + getEndTile ().getPiece () );
             selectPiece ();
 
             if (isPieceSelected) {
-                System.out.println ( "selected row to move : " + selectedPieceRow );
-                System.out.println ( "selected column to move : " + selectedPieceColumn );
+                System.out.println ( "selected row to move : " + startRow );
+                System.out.println ( "selected column to move : " + startColumn );
             }
             mouseEvent.setDragDetect ( true );
         } );
 
-        setOnDragDetected( mouseEvent -> {
-            startFullDrag();
-            System.out.println ( "Event on Source: drag detected + " + (int) (mouseEvent.getX ()/tileWidth) + " " + (int) (mouseEvent.getY ()/tileHeight) );
-            selectedPieceColumn = (int) (mouseEvent.getX ()/tileWidth);
-            selectedPieceRow = (int) (mouseEvent.getY ()/tileHeight);
-        } );
-
-        setOnMouseDragged( mouseEvent -> {
-            selectedColumn = (int) (mouseEvent.getX ()/tileWidth);
-            selectedRow = (int) (mouseEvent.getY ()/tileHeight);
-            System.out.println ( "Event on Source: mouse dragged + " + selectedRow + " " + selectedColumn );
-            mouseEvent.setDragDetect(false);
-            board[selectedPieceRow][selectedPieceColumn].getPiece ().getImageView ().setLayoutX ( mouseEvent.getX () - 30 );
-            board[selectedPieceRow][selectedPieceColumn].getPiece ().getImageView ().setLayoutY ( mouseEvent.getY () - 30 );
-        } );
-
-        setOnMouseReleased( mouseEvent -> {
-            selectedColumn = (int) (mouseEvent.getX ()/tileWidth);
-            selectedRow = (int) (mouseEvent.getY ()/tileHeight);
-            setMouseTransparent(false);
-            System.out.println ( "Event on Source: mouse released + " + (int) (mouseEvent.getX ()/tileWidth) + " " + (int) (mouseEvent.getY ()/tileHeight) );
-            System.out.println ( "\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014" );
-            unhighlightTiles ();
-            board[selectedRow][selectedColumn].setPiece ( board[selectedPieceRow][selectedPieceColumn].getPiece () );
-            board[selectedPieceRow][selectedPieceColumn].setPiece ( null );
-            board[selectedRow][selectedColumn].highlightTile ( Color.BLACK );
-            board[selectedRow][selectedColumn].getPiece ().getImageView ().setLayoutX ( 75*selectedColumn + 7.5 );
-            board[selectedRow][selectedColumn].getPiece ().getImageView ().setLayoutY ( 75*selectedRow + 7.5 );
-        } );
-
+        if (getEndTile ().getPiece () != null)
+            beginDrag ();
 
     }
 
     void mouseClickOption () {
         setOnMouseClicked ( mouseEvent -> {
 
-            selectedColumn = (int) (mouseEvent.getX ()/tileWidth);
-            selectedRow = (int) (mouseEvent.getY ()/tileHeight);
+            endColumn = (int) (mouseEvent.getX ()/tileWidth);
+            endRow = (int) (mouseEvent.getY ()/tileHeight);
             unhighlightTiles ();
-            board[selectedRow][selectedColumn].highlightTile ( Color.BLACK );
-            System.out.println ( "selected row : " + selectedRow );
-            System.out.println ( "selected column : " + selectedColumn );
-            System.out.println ( "selected piece : " + board[selectedRow][selectedColumn].getPiece () );
+            getEndTile ().highlightTile ( Color.BLACK );
+            System.out.println ( "selected row : " + endRow );
+            System.out.println ( "selected column : " + endColumn );
+            System.out.println ( "selected piece : " + getEndTile ().getPiece () );
             selectPiece ();
 
             if (isPieceSelected) {
-                System.out.println ( "selected row to move : " + selectedPieceRow );
-                System.out.println ( "selected column to move : " + selectedPieceColumn );
+                System.out.println ( "selected row to move : " + startRow );
+                System.out.println ( "selected column to move : " + startColumn );
             }
 
         } );
         System.out.println ( "\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014" );
 
+    }
+
+    Tile getStartTile () {
+        return board[startRow][startColumn];
+    }
+
+    Tile getEndTile () {
+        return board[endRow][endColumn];
     }
 
 
