@@ -1,41 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.effect.BoxBlur?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<GridPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.RegisterController">
-   <columnConstraints>
-      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-   </columnConstraints>
-   <rowConstraints>
-      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-   </rowConstraints>
+
+<AnchorPane prefHeight="200.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.RegisterController">
    <children>
-      <AnchorPane prefHeight="200.0" prefWidth="200.0">
-         <children>
-            <ImageView fitHeight="474.0" fitWidth="474.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../registrationCompleted.jpg" />
-               </image>
-               <effect>
-                  <BoxBlur />
-               </effect>
-            </ImageView>
-            <Text fill="#1cbd4c" layoutX="84.0" layoutY="209.0" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="0.2" text="NICE BRO!&#10;Registration Completed!!!11!" textAlignment="CENTER">
-               <font>
-                  <Font name="Comic Sans MS" size="24.0" />
-               </font>
-            </Text>
-            <Button fx:id="destroyButton" layoutX="124.0" layoutY="346.0" mnemonicParsing="false" onAction="#destroyButtonAction" text="Please Just Let Me Enter The Chess App" />
-         </children>
-      </AnchorPane>
+      <ImageView fitHeight="474.0" fitWidth="474.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../registrationCompleted.jpg" />
+         </image>
+         <effect>
+            <BoxBlur />
+         </effect>
+      </ImageView>
+      <Text fill="#1cbd4c" layoutX="84.0" layoutY="209.0" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="0.2" text="NICE BRO!&#10;Registration Completed!!!11!" textAlignment="CENTER">
+         <font>
+            <Font name="Comic Sans MS" size="24.0" />
+         </font>
+      </Text>
+      <Button fx:id="destroyButton" layoutX="124.0" layoutY="346.0" mnemonicParsing="false" onAction="#destroyButtonAction" text="Please Just Let Me Enter The Chess App" />
    </children>
-</GridPane>
+</AnchorPane>

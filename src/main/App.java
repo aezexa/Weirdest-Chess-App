@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -33,7 +34,9 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
+
         startChess ( stage );
+//        startGame ( stage );
     }
 
 
@@ -86,13 +89,12 @@ public class App extends Application {
         stage.setTitle ( "Weird Chess" );
         stage.setScene( currentScene );
         stage.setResizable ( false ); //felan
-//        root.prefHeightProperty().bind(currentScene.heightProperty());
-//        root.prefWidthProperty().bind(currentScene.widthProperty());
         stage.show();
     }
 
     private static void startChess (Stage stage) throws IOException {
         currentStage = stage;
+        stage.setResizable ( false );
         BorderPane root = getFXMLLoader ( "chessScreen" ).load ();
         stage.show ();
     }

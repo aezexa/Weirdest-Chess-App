@@ -35,10 +35,10 @@ public abstract class Piece extends Group{
 	}
 
 	public void setImageProperty() {
-		imageView.setFitHeight ( 75 );
-		imageView.setFitWidth ( 75 );
-		imageView.setLayoutX ( 75* column );
-		imageView.setLayoutY ( 75* row );
+		imageView.setFitHeight ( 60 );
+		imageView.setFitWidth ( 60 );
+		imageView.setLayoutX ( 75* column + 7.5 );
+		imageView.setLayoutY ( 75* row + 7.5 );
 		imageView.setPreserveRatio(true);
 		imageView.setSmooth(true);
 		imageView.setCache(true);

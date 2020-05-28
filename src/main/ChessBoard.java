@@ -1,6 +1,9 @@
 package main;
 
+import javafx.event.EventHandler;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.input.MouseDragEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -114,22 +117,8 @@ public class ChessBoard extends Pane {
         User.setBlackUser ( new User ( "Alireza's Enemy", "1" ) );
         setFirstOwnership ( );
 
-        setOnMouseClicked ( mouseEvent -> {
-            selectedColumn = (int) (mouseEvent.getX ()/tileWidth);
-            selectedRow = (int) (mouseEvent.getY ()/tileHeight);
-            unhighlightTiles ();
-            board[selectedRow][selectedColumn].highlightTile ( Color.BLACK );
-            System.out.println ( "selected row : " + selectedRow );
-            System.out.println ( "selected column : " + selectedColumn );
-            System.out.println ( "selected piece : " + board[selectedRow][selectedColumn].getPiece () );
-            selectPiece ();
+        mouseDragOption ();
 
-            if (isPieceSelected) {
-                System.out.println ( "selected row to move : " + selectedPieceRow );
-                System.out.println ( "selected column to move : " + selectedPieceColumn );
-            }
-            System.out.println ( "\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014" );
-        } );
     }
 
     private static void setFirstOwnership () {
@@ -151,7 +140,6 @@ public class ChessBoard extends Pane {
             for (int column = 0; column < 8; column++)
             {
                 if (board[row][column].getRectangle().getStroke() != null)
-//                if (!board[column][row].getRectangle ().getStyle ().equals ( "-fx-border-color: transparent" ))
                     board[row][column].unhighlightTile ();
             }
         }
@@ -192,6 +180,84 @@ public class ChessBoard extends Pane {
         return User.getWhiteUser ();
     }
 
+    void mouseDragOption () {
+
+        setOnMousePressed ( mouseEvent -> {
+
+            setMouseTransparent(true);
+            System.out.println ( "Event on Source: mouse pressed" );
+
+            selectedColumn = (int) (mouseEvent.getX ()/tileWidth);
+            selectedRow = (int) (mouseEvent.getY ()/tileHeight);
+            unhighlightTiles ();
+            board[selectedRow][selectedColumn].highlightTile ( Color.BLACK );
+            System.out.println ( "selected row : " + selectedRow );
+            System.out.println ( "selected column : " + selectedColumn );
+            System.out.println ( "selected piece : " + board[selectedRow][selectedColumn].getPiece () );
+            selectPiece ();
+
+            if (isPieceSelected) {
+                System.out.println ( "selected row to move : " + selectedPieceRow );
+                System.out.println ( "selected column to move : " + selectedPieceColumn );
+            }
+            mouseEvent.setDragDetect ( true );
+        } );
+
+        setOnDragDetected( mouseEvent -> {
+            startFullDrag();
+            System.out.println ( "Event on Source: drag detected + " + (int) (mouseEvent.getX ()/tileWidth) + " " + (int) (mouseEvent.getY ()/tileHeight) );
+            selectedPieceColumn = (int) (mouseEvent.getX ()/tileWidth);
+            selectedPieceRow = (int) (mouseEvent.getY ()/tileHeight);
+        } );
+
+        setOnMouseDragged( mouseEvent -> {
+            selectedColumn = (int) (mouseEvent.getX ()/tileWidth);
+            selectedRow = (int) (mouseEvent.getY ()/tileHeight);
+            System.out.println ( "Event on Source: mouse dragged + " + selectedRow + " " + selectedColumn );
+            mouseEvent.setDragDetect(false);
+            board[selectedPieceRow][selectedPieceColumn].getPiece ().getImageView ().setLayoutX ( mouseEvent.getX () - 30 );
+            board[selectedPieceRow][selectedPieceColumn].getPiece ().getImageView ().setLayoutY ( mouseEvent.getY () - 30 );
+        } );
+
+        setOnMouseReleased( mouseEvent -> {
+            selectedColumn = (int) (mouseEvent.getX ()/tileWidth);
+            selectedRow = (int) (mouseEvent.getY ()/tileHeight);
+            setMouseTransparent(false);
+            System.out.println ( "Event on Source: mouse released + " + (int) (mouseEvent.getX ()/tileWidth) + " " + (int) (mouseEvent.getY ()/tileHeight) );
+            System.out.println ( "\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014" );
+            unhighlightTiles ();
+            board[selectedRow][selectedColumn].setPiece ( board[selectedPieceRow][selectedPieceColumn].getPiece () );
+            board[selectedPieceRow][selectedPieceColumn].setPiece ( null );
+            board[selectedRow][selectedColumn].highlightTile ( Color.BLACK );
+            board[selectedRow][selectedColumn].getPiece ().getImageView ().setLayoutX ( 75*selectedColumn + 7.5 );
+            board[selectedRow][selectedColumn].getPiece ().getImageView ().setLayoutY ( 75*selectedRow + 7.5 );
+        } );
+
+
+    }
+
+    void mouseClickOption () {
+        setOnMouseClicked ( mouseEvent -> {
+
+            selectedColumn = (int) (mouseEvent.getX ()/tileWidth);
+            selectedRow = (int) (mouseEvent.getY ()/tileHeight);
+            unhighlightTiles ();
+            board[selectedRow][selectedColumn].highlightTile ( Color.BLACK );
+            System.out.println ( "selected row : " + selectedRow );
+            System.out.println ( "selected column : " + selectedColumn );
+            System.out.println ( "selected piece : " + board[selectedRow][selectedColumn].getPiece () );
+            selectPiece ();
+
+            if (isPieceSelected) {
+                System.out.println ( "selected row to move : " + selectedPieceRow );
+                System.out.println ( "selected column to move : " + selectedPieceColumn );
+            }
+
+        } );
+        System.out.println ( "\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014" );
+
+    }
+
 
 
 
@@ -224,11 +290,6 @@ public class ChessBoard extends Pane {
         }
 
         public void highlightTile ( Color color ) {
-//            this.setStyle ( "-fx-border-color: #8e09ff;-fx-border-radius: 10;-fx-border-width: 3" );
-
-//            this.setBorder ( new Border(new BorderStroke(color,
-//                    BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)) );
-
             rectangle.setStrokeType( StrokeType.INSIDE );
             rectangle.setStrokeWidth(3);
             rectangle.setStroke(color);
@@ -238,13 +299,11 @@ public class ChessBoard extends Pane {
                 piece.getImageView ( ).setEffect ( ds );
             }
 
-//
         if (color == Color.GREEN)
             isHighlighted = true;
         }
 
         public void unhighlightTile () {
-//            this.setStyle ( "-fx-border-color: transparent" );
             rectangle.setStroke(null);
             if (piece != null)
                 piece.getImageView ().setEffect ( null );

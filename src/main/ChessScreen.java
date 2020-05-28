@@ -22,8 +22,6 @@ public class ChessScreen implements Initializable {
 
     @Override
     public void initialize ( URL url , ResourceBundle resourceBundle ) {
-//        App.currentStage.setMinWidth ( 300 );
-//        App.currentStage.setMinHeight ( 300 );
         screen = new StackPane (  );
         chessControl = new ChessControl ();
         screen.getChildren ().add ( chessControl );
