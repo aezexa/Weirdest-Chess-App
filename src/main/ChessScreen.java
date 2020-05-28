@@ -28,7 +28,7 @@ public class ChessScreen implements Initializable {
 
         screen.setPrefSize ( 600, 700 );
 
-        App.currentStage.setScene (  new Scene ( screen , 600, 700 ) );
+        App.currentStage.setScene (  new Scene ( screen , 900, 700 ) );
         App.currentStage.centerOnScreen ();
 
     }

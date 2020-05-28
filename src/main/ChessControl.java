@@ -26,6 +26,7 @@ public class ChessControl extends Control  {
 
     private static BorderPane mainBorderPane;
     private static ChessBar chessBar;
+    private static MoveBar moveBar;
     private static ChessBoard chessBoard;
 
     public ChessControl ( ) {
@@ -35,7 +36,8 @@ public class ChessControl extends Control  {
         AnchorPane anchorPane = new AnchorPane (  );
 
         chessBar = new ChessBar (  );
-        chessBoard = new ChessBoard (chessBar);
+        moveBar = new MoveBar ();
+        chessBoard = new ChessBoard (chessBar, moveBar);
         FileInputStream input = null;
         try {
             input = new FileInputStream ( new File ( "." ).getCanonicalPath () + File.separator + "src" + File.separator + "resources" + File.separator + "board.png" );
@@ -50,7 +52,7 @@ public class ChessControl extends Control  {
         boardImage.setY ( 100 );
         boardImage.setPreserveRatio ( true );
 
-        anchorPane.getChildren ().addAll ( boardImage , chessBar , chessBoard);
+        anchorPane.getChildren ().addAll ( boardImage , chessBar ,moveBar, chessBoard);
         getChildren ().addAll ( anchorPane );
 
         chessBar.getExitButton ().setOnAction ( event -> endGame () );

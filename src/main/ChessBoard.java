@@ -31,13 +31,15 @@ public class ChessBoard extends Pane {
     boolean gameOver;
     boolean isCheckMate;
     ChessBar chessBar;
+    MoveBar moveBar;
 
-    public ChessBoard (ChessBar chessBar) {
+    public ChessBoard (ChessBar chessBar, MoveBar moveBar) {
         this.setLayoutX ( 0 );
         this.setLayoutY ( 0 );
         this.setPrefHeight ( 600.0 );
         this.setPrefWidth ( 600.0 );
         this.chessBar = chessBar;
+        this.moveBar = moveBar;
         initializeGame ();
 
     }
@@ -116,16 +118,10 @@ public class ChessBoard extends Pane {
 //        allUsersKillHistory.clear ( );
 //        gameLeaveKey = false;
 //        kingHasBeenHit = false;
-//
-//        moveStringToAppend = "";
-//        killStringToAppend = "";
-//
+
+
 //        Variables.whiteUser.setRemainingUndo ( 2 );
 //        Variables.blackUser.setRemainingUndo ( 2 );
-//        Variables.whiteUser.setTurn ( true );
-//        Variables.blackUser.setTurn ( false );
-//        Variables.whiteUser.clearMoveAndKillHistory ( );
-//        Variables.blackUser.clearMoveAndKillHistory ( );
 
         mouseDragOption ();
 
@@ -203,16 +199,6 @@ public class ChessBoard extends Pane {
 
     void moveActions () {
 
-        //initializing start and end coordination
-//            startRowBefore = endRow;
-//            startColumnBefore = endColumn;
-//            endRowBefore = row;
-//            endColumnBefore = column;
-
-        //initializing start and end piece name
-//            startNameBefore = board[startRowBefore - 1][startColumnBefore - 1];
-//            endNameBefore = board[endRowBefore - 1][endColumnBefore - 1];
-
         //if we had a kill
         if ( getOppositeTurnUser ( ).userOwnsSquare ( endRow , endColumn ) ) {
             System.out.println ( "rival piece destroyed" );
@@ -222,19 +208,13 @@ public class ChessBoard extends Pane {
             hadKill = true;
 
             //appending to history
-//                moveStringToAppend = board[selectedRow - 1][selectedColumn - 1] + " " +
-//                        selectedRow + "," + selectedColumn +
-//                        " to " +
-//                        row + "," + column +
-//                        " destroyed " + board[row - 1][column - 1];
+            String moveString = getTurnUser ().getName () + "'s " + getStartTile ().getPiece ().name + " " +
+                    getStartTile ().getName ( startRow, startColumn ) +
+                    " to " +
+                    getEndTile ().getName ( endRow , endColumn ) +
+                    " destroyed " + getEndTile ().getPiece ().name;
 
-//                getTurnUser ( ).addToMoveHistory ( moveStringToAppend );
-//                allUsersMoveHistory.add ( moveStringToAppend );
-
-//                killStringToAppend = board[row - 1][column - 1] + " killed in spot " + row + "," + column;
-
-//                getOppositeTurnUser ( ).addToKillHistory ( killStringToAppend );
-//                allUsersKillHistory.add ( killStringToAppend );
+            moveBar.setAreaString ( moveBar.getAreaString ( ) + "\n" + moveString );
 
             //if king had been hit
             if ( board[endRow][endColumn].getPiece () instanceof King ) {
@@ -249,21 +229,24 @@ public class ChessBoard extends Pane {
             hadKill = false;
 
             //appending to history
-//                moveStringToAppend = board[selectedRow - 1][selectedColumn - 1] + " " +
-//                        selectedRow + "," + selectedColumn +
-//                        " to " +
-//                        row + "," + column;
+            String moveString = getTurnUser ().getName () + "'s " + getStartTile ().getPiece ().name + " " +
+                    getStartTile ().getName ( startRow, startColumn ) +
+                    " to " +
+                    getEndTile ().getName ( endRow , endColumn );
 
-//                getTurnUser ( ).addToMoveHistory ( moveStringToAppend );
-//                allUsersMoveHistory.add ( moveStringToAppend );
+            moveBar.setAreaString ( moveBar.getAreaString ( ) + "\n" + moveString );
         }
 
         //setting booleans
         hasMoved = true;
 
         //changing board
-//            board[row - 1][column - 1] = board[selectedRow - 1][selectedColumn - 1];
-//            board[selectedRow - 1][selectedColumn - 1] = "  ";
+        getEndTile ().setPiece ( getStartTile ().getPiece () );
+        getStartTile ().setPiece ( null );
+
+        getEndTile ().highlightTile ( Color.BLACK );
+        getEndTile ().getPiece ().getImageView ().setLayoutX ( 75* endColumn + 7.5 );
+        getEndTile ().getPiece ().getImageView ().setLayoutY ( 75* endRow + 7.5 );
 
         //change ownership
         changeOwnershipOfTile ( );
@@ -290,20 +273,13 @@ public class ChessBoard extends Pane {
     }
 
     void acceptDrag() {
-        board[endRow][endColumn].setPiece ( board[startRow][startColumn].getPiece () );
-        board[startRow][startColumn].setPiece ( null );
-        board[endRow][endColumn].highlightTile ( Color.BLACK );
-        board[endRow][endColumn].getPiece ().getImageView ().setLayoutX ( 75* endColumn + 7.5 );
-        board[endRow][endColumn].getPiece ().getImageView ().setLayoutY ( 75* endRow + 7.5 );
-        hasMoved = true;
         moveActions ();
-
         changeTurns ();
     }
 
     void declineDrag() {
-        board[startRow][startColumn].getPiece ().getImageView ().setLayoutX ( 75* startColumn + 7.5 );
-        board[startRow][startColumn].getPiece ().getImageView ().setLayoutY ( 75* startRow + 7.5 );
+        getStartTile ().getPiece ().getImageView ().setLayoutX ( 75* startColumn + 7.5 );
+        getStartTile ().getPiece ().getImageView ().setLayoutY ( 75* startRow + 7.5 );
     }
 
     void beginDrag() {
@@ -320,8 +296,8 @@ public class ChessBoard extends Pane {
             System.out.println ( "Event on Source: mouse dragged + " + endRow + " " + endColumn );
             mouseEvent.setDragDetect(false);
             if (isPieceHere ()) {
-                board[startRow][startColumn].getPiece ( ).getImageView ( ).setLayoutX ( mouseEvent.getX ( ) - 30 );
-                board[startRow][startColumn].getPiece ( ).getImageView ( ).setLayoutY ( mouseEvent.getY ( ) - 30 );
+                getStartTile ().getPiece ( ).getImageView ( ).setLayoutX ( mouseEvent.getX ( ) - 30 );
+                getStartTile ().getPiece ( ).getImageView ( ).setLayoutY ( mouseEvent.getY ( ) - 30 );
             }
         } );
 
@@ -469,6 +445,12 @@ public class ChessBoard extends Pane {
 
         public Piece getPiece () {
             return piece;
+        }
+
+        public String getName (int row, int column) {
+            String rowString = String.valueOf ( 8 - row );
+            char columnString = (char) (column + 17);
+            return rowString + columnString;
         }
     }
 

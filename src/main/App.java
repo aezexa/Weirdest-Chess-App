@@ -94,7 +94,7 @@ public class App extends Application {
 
     private static void startChess (Stage stage) throws IOException {
         currentStage = stage;
-        stage.setResizable ( false );
+//        stage.setResizable ( false );
         BorderPane root = getFXMLLoader ( "chessScreen" ).load ();
         stage.show ();
     }
