@@ -19,6 +19,14 @@ public class Queen extends Piece {
 		imageView.setImage ( image );
 		super.setImageProperty ( );
 	}
+
+	public Queen (Queen queen) {
+		super(queen.owner , queen.row, queen.column);
+		name = queen.name;
+		image = queen.image;
+		imageView.setImage ( image );
+		super.setImageProperty ();
+	}
 	
 	@Override
 	public ImageView getImageView () {

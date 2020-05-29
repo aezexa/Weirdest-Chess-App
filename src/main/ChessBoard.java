@@ -7,9 +7,12 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
 import javafx.scene.transform.Translate;
 
+import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import static main.App.*;
-import static main.User.getWhiteUser;
-import static main.User.getBlackUser;
+import static main.User.*;
 
 public class ChessBoard extends Pane {
 
@@ -26,12 +29,18 @@ public class ChessBoard extends Pane {
     private int startRow;
     private int startColumn;
     boolean hasMoved;
+    boolean hasUsedUndo;
     boolean prevOppositeTurnOwnership;
     boolean hadKill;
+    boolean movesUnlimited;
     boolean gameOver;
     boolean isCheckMate;
     ChessBar chessBar;
     MoveBar moveBar;
+    User whiteUser;
+    User blackUser;
+    public static ArrayList<ChessBoard> states;
+    public ArrayList<String> history;
 
     public ChessBoard (ChessBar chessBar, MoveBar moveBar) {
         this.setLayoutX ( 0 );
@@ -40,22 +49,42 @@ public class ChessBoard extends Pane {
         this.setPrefWidth ( 600.0 );
         this.chessBar = chessBar;
         this.moveBar = moveBar;
+        User.setWhiteUser ( new User ( "Alireza", "1" ) );
+        User.setBlackUser ( new User ( "Alireza's Enemy", "1" ) );
+        whiteUser = getWhiteUser ();
+        blackUser = getBlackUser ();
+        movesUnlimited = (GameMenuController.limit == 0);
         initializeGame ();
 
+    }
+
+    public ChessBoard (ChessBoard chessBoard) {
+        board = new Tile[8][8];
+        setWhiteUser ( chessBoard.whiteUser );
+        setBlackUser ( chessBoard.blackUser );
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (chessBoard.board[i][j] != null)
+                    board[i][j] = new Tile ( chessBoard.board[i][j] );
+                else
+                    board[i][j] = new Tile ( i , j );
+            }
+        }
     }
 
     private void initializeGame () {
 
         inGame = true;
         board = new Tile[8][8];
+        history = new ArrayList <> (  );
+        states = new ArrayList <> (  );
 
-        User.setWhiteUser ( new User ( "Alireza", "1" ) );
-        User.setBlackUser ( new User ( "Alireza's Enemy", "1" ) );
-        User.getWhiteUser ().setTurn ( true );
+
+        whiteUser.setTurn ( true );
         User.getBlackUser ().setTurn ( false );
-        setFirstOwnership ( );
+//        setFirstOwnership ( );
 
-        chessBar.setTurn ( User.getWhiteUser ().getName () );
+        chessBar.setTurn ( whiteUser.getName () );
 
 
         int tileNum = 8;
@@ -101,44 +130,81 @@ public class ChessBoard extends Pane {
         board[0][4].setPiece ( new Queen ( getBlackUser (),0,4 ) );
         board[7][4].setPiece ( new Queen ( getWhiteUser (),7,4 ) );
 
+        //Images
         for (int row = 0; row < 8; row++)
             for (int column = 0; column < 8; column++)
                 if (row == 0 || row == 1 || row == 6 || row == 7)
                     getChildren ().add ( board[row][column].getPiece ().getImageView () );
 
+        getWhiteUser ().setRemainingUndo ( 2 );
+        getBlackUser ().setRemainingUndo ( 2 );
 
-
-//        movesUnlimited = (moveLimit == 0);
-//        isSelected = false; //selected ints and undo variables are automatically handled in functions
-//        hadKill = false;
-//        hasMoved = false;
-//        hasUsedUndo = false;
-//        prevOppositeTurnOwnership = false;
-//        allUsersMoveHistory.clear ( );
-//        allUsersKillHistory.clear ( );
-//        gameLeaveKey = false;
-//        kingHasBeenHit = false;
-
-
-//        Variables.whiteUser.setRemainingUndo ( 2 );
-//        Variables.blackUser.setRemainingUndo ( 2 );
+        states.add ( new ChessBoard ( this ) );
 
         mouseDragOption ();
 
     }
 
-    private static void setFirstOwnership () {
-        for (int row = 0; row <= 1; row++)
-            for (int column = 0; column < 8; column++) {
-                User.getWhiteUser ().setUserOwnsSquare ( 7 - row , column , true );
-                User.getBlackUser ().setUserOwnsSquare ( row , column , true );
+    public void reset (int stateNumber) {
+        unhighlightTiles ();
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (board[i][j].getPiece () != null)
+                    getChildren ().remove ( board[i][j].getPiece ().getImageView () );
             }
-        for (int row = 2; row < 8; row++)
-            for (int column = 0; column < 8; column++) {
-                User.getWhiteUser ().setUserOwnsSquare ( 7 - row , column , false );
-                User.getBlackUser ().setUserOwnsSquare ( row , column , false );
+        }
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                board[i][j] = states.get ( stateNumber ).board[i][j];
+                if (board[i][j].getPiece () != null)
+                    getChildren ().add ( board[i][j].getPiece ().getImageView () );
             }
+        }
+        int count = states.size () - stateNumber - 1;
+        while (count != 0) {
+            states.remove ( states.size ( ) - 1 );
+            count--;
+        }
+
+        updateUndoHistory ( stateNumber );
+
+
+        whiteUser.setTurn ( states.size ()%2 != 0 );
+        blackUser.setTurn ( states.size ()%2 == 0 );
+        chessBar.setTurn ( getTurnUser ().getName () );
+        moveBar.setAreaString ( makeHistoryString () );
+
     }
+
+    private void updateUndoHistory (int stateNumber) {
+        if (stateNumber == 0)
+            while (history.size () > 0)
+                history.remove ( history.size () -1 );
+        else {
+            while ( getHistoryStateNumber ( history.get ( history.size ( ) - 1 ) ) != stateNumber )
+                history.remove ( history.size ( ) - 1 );
+        }
+    }
+
+    private int getHistoryStateNumber (String string) {
+        Matcher matcher = Pattern.compile ( "\\((.*)\\).*" ).matcher ( string );
+        if ( matcher.matches () )
+            return Integer.parseInt ( matcher.group ( 1 ) );
+        return 0;
+    }
+
+//    private static void setFirstOwnership () {
+//        for (int row = 0; row <= 1; row++)
+//            for (int column = 0; column < 8; column++) {
+//                whiteUser.setUserOwnsSquare ( 7 - row , column , true );
+//                User.getBlackUser ().setUserOwnsSquare ( row , column , true );
+//            }
+//        for (int row = 2; row < 8; row++)
+//            for (int column = 0; column < 8; column++) {
+//                whiteUser.setUserOwnsSquare ( 7 - row , column , false );
+//                User.getBlackUser ().setUserOwnsSquare ( row , column , false );
+//            }
+//    }
 
     public void unhighlightTiles () {
         for (int row = 0; row < 8; row++)
@@ -154,44 +220,45 @@ public class ChessBoard extends Pane {
     public void selectPiece () {
         isPieceSelected = false;
         if ( !hasSelectErrors ( endRow , endColumn ) ) {
-            if ( getTurnUser ( ).userOwnsSquare ( endRow , endColumn ) ) {
-                isPieceSelected = true;
-                startRow = endRow;
-                startColumn = endColumn;
-            }
+//            if ( board[endRow][endColumn].getPiece ().getOwner () == getWhiteUser () ) {
+            isPieceSelected = true;
+            startRow = endRow;
+            startColumn = endColumn;
+//            }
         }
     }
 
     boolean hasSelectErrors ( int row , int column ) {
 
-        if ( getOppositeTurnUser ( ).userOwnsSquare ( row , column ) ) {
-            System.out.println ( "you can only select one of your pieces" );
-            return true;
-        } else if ( !getTurnUser ( ).userOwnsSquare ( row , column ) ) {
+        if ( board[row][column].getPiece () == null ) {
             System.out.println ( "no piece on this spot" );
+            return true;
+        }
+        if ( board[row][column].getPiece ().getOwner () == getOppositeTurnUser () ) {
+            System.out.println ( "you can only select one of your pieces" );
             return true;
         }
         return false;
     }
 
     User getTurnUser () {
-        if ( User.getWhiteUser ().isTurn ( ) )
-            return User.getWhiteUser ();
+        if ( whiteUser.isTurn ( ) )
+            return whiteUser;
         return User.getBlackUser ();
     }
 
     User getOppositeTurnUser () {
-        if ( User.getWhiteUser ().isTurn ( ) )
+        if ( whiteUser.isTurn ( ) )
             return User.getBlackUser ();
-        return User.getWhiteUser ();
+        return whiteUser;
     }
 
     private void changeTurns () {
-        if ( User.getWhiteUser ().isTurn ( ) ) {
-            User.getWhiteUser ().setTurn ( false );
+        if ( whiteUser.isTurn ( ) ) {
+            whiteUser.setTurn ( false );
             User.getBlackUser ().setTurn ( true );
         } else {
-            User.getWhiteUser ().setTurn ( true );
+            whiteUser.setTurn ( true );
             User.getBlackUser ().setTurn ( false );
         }
         chessBar.setTurn ( getTurnUser ().getName () );
@@ -200,28 +267,9 @@ public class ChessBoard extends Pane {
     void moveActions () {
 
         //if we had a kill
-        if ( getOppositeTurnUser ( ).userOwnsSquare ( endRow , endColumn ) ) {
-            System.out.println ( "rival piece destroyed" );
+        String moveString;
 
-            //setting booleans
-            prevOppositeTurnOwnership = true;
-            hadKill = true;
-
-            //appending to history
-            String moveString = getTurnUser ().getName () + "'s " + getStartTile ().getPiece ().name + " " +
-                    getStartTile ().getName ( startRow, startColumn ) +
-                    " to " +
-                    getEndTile ().getName ( endRow , endColumn ) +
-                    " destroyed " + getEndTile ().getPiece ().name;
-
-            moveBar.setAreaString ( moveBar.getAreaString ( ) + "\n" + moveString );
-
-            //if king had been hit
-            if ( board[endRow][endColumn].getPiece () instanceof King ) {
-                gameOver = true;
-            }
-
-        } else { //if we didn't have a kill
+        if ( board[endRow][endColumn].getPiece () == null ) { //if we didn't have a kill
             System.out.println ( "moved" );
 
             //setting booleans
@@ -229,13 +277,34 @@ public class ChessBoard extends Pane {
             hadKill = false;
 
             //appending to history
-            String moveString = getTurnUser ().getName () + "'s " + getStartTile ().getPiece ().name + " " +
+            moveString = "(" + states.size () + ") " + getTurnUser ().getName () + " : " + getStartTile ().getPiece ().name + " " +
                     getStartTile ().getName ( startRow, startColumn ) +
                     " to " +
                     getEndTile ().getName ( endRow , endColumn );
+        } else {
+            System.out.println ( "rival piece destroyed" );
 
-            moveBar.setAreaString ( moveBar.getAreaString ( ) + "\n" + moveString );
+            //setting booleans
+            prevOppositeTurnOwnership = true;
+            hadKill = true;
+
+            //appending to history
+            moveString = "(" + states.size () + ") " + getTurnUser ().getName () + " : " + getStartTile ().getPiece ().name + " " +
+                    getStartTile ().getName ( startRow, startColumn ) +
+                    " to " +
+                    getEndTile ().getName ( endRow , endColumn ) +
+                    " destroyed " + getEndTile ().getPiece ().name;
+
+            //if king had been hit
+            if ( board[endRow][endColumn].getPiece () instanceof King ) {
+                gameOver = true;
+            }
+
         }
+
+        history.add ( moveString );
+
+        moveBar.setAreaString ( makeHistoryString () );
 
         //setting booleans
         hasMoved = true;
@@ -248,13 +317,62 @@ public class ChessBoard extends Pane {
         getEndTile ().getPiece ().getImageView ().setLayoutX ( 75* endColumn + 7.5 );
         getEndTile ().getPiece ().getImageView ().setLayoutY ( 75* endRow + 7.5 );
 
+        getEndTile ().getPiece ().row = endRow;
+        getEndTile ().getPiece ().column = endColumn;
+
         //change ownership
-        changeOwnershipOfTile ( );
+//        changeOwnershipOfTile ( );
     }
 
     private boolean hasMoveErrors ( ) {
         if ( !getStartTile ().getPiece ().canMove ( startRow , endRow , startColumn , endColumn ) || !isDifferentColor () ) {
             System.out.println ( "cannot move to the spot" );
+            return true;
+        }
+        return false;
+    }
+
+//    private void undo () {
+//        if ( !hasUndoErrors ( ) ) {
+//            System.out.println ( "undo completed" );
+//
+//            //variables
+//            hasUsedUndo = true;
+//            hasMoved = false;
+//            kingHasBeenHit = false;
+//
+//            //selected piece is undo-ed
+//            if ( selectedRow == endRowBefore && selectedColumn == endColumnBefore ) {
+//                selectedRow = startRowBefore;
+//                selectedColumn = endColumnBefore;
+//            }
+//
+//            getTurnUser ( ).reduceUndo ( ); //reduce Undo
+//            undoOwnership ( endRowBefore , endColumnBefore , startRowBefore , startColumnBefore ); //undo ownership
+//            board[startRowBefore - 1][startColumnBefore - 1] = startNameBefore; //change piece location
+//            board[endRowBefore - 1][endColumnBefore - 1] = endNameBefore; //change piece location
+//
+//            //change move history
+//            getTurnUser ( ).removeFromMoveHistory ( );
+//            allUsersMoveHistory.remove ( allUsersMoveHistory.size ( ) - 1 );
+//
+//            //change kill history
+//            if ( hadKill ) {
+//                getOppositeTurnUser ( ).removeFromKillHistory ( );
+//                allUsersKillHistory.remove ( allUsersKillHistory.size ( ) - 1 );
+//            }
+//        }
+//    }
+
+    boolean hasUndoErrors () {
+        if ( getTurnUser ( ).getRemainingUndo ( ) == 0 ) {
+            System.out.println ( "you cannot undo anymore" );
+            return true;
+        } else if ( !hasMoved ) {
+            System.out.println ( "you must move before undo" );
+            return true;
+        } else if ( hasUsedUndo ) {
+            System.out.println ( "you have used your undo for this turn" );
             return true;
         }
         return false;
@@ -273,8 +391,11 @@ public class ChessBoard extends Pane {
     }
 
     void acceptDrag() {
-        moveActions ();
-        changeTurns ();
+
+        moveActions ( );
+        changeTurns ( );
+
+        states.add ( new ChessBoard ( this ) );
     }
 
     void declineDrag() {
@@ -293,7 +414,7 @@ public class ChessBoard extends Pane {
         setOnMouseDragged( mouseEvent -> {
             endColumn = (int) (mouseEvent.getX ()/tileWidth);
             endRow = (int) (mouseEvent.getY ()/tileHeight);
-            System.out.println ( "Event on Source: mouse dragged + " + endRow + " " + endColumn );
+//            System.out.println ( "Event on Source: mouse dragged + " + endRow + " " + endColumn );
             mouseEvent.setDragDetect(false);
             if (isPieceHere ()) {
                 getStartTile ().getPiece ( ).getImageView ( ).setLayoutX ( mouseEvent.getX ( ) - 30 );
@@ -383,6 +504,17 @@ public class ChessBoard extends Pane {
         return board[endRow][endColumn];
     }
 
+    String makeHistoryString () {
+        StringBuilder stringBuilder = new StringBuilder (  );
+        if (history.size () == 0)
+            return "";
+        stringBuilder.append ( history.get ( 0 ) );
+        for (int i = 1; i < history.size ( ); i++) {
+            stringBuilder.append ( "\n" ).append ( history.get ( i ) );
+        }
+        return stringBuilder.toString ();
+    }
+
 
 
 
@@ -414,10 +546,34 @@ public class ChessBoard extends Pane {
             getChildren ().add ( rectangle );
         }
 
+        public Tile (Tile tile) {
+            columnPosition = tile.columnPosition;
+            rowPosition = tile.rowPosition;
+            this.setHeight ( tileLength );
+            this.setWidth ( tileLength );
+            rectangle = new Rectangle ( tileLength,tileLength );
+//            rectangle = tile.rectangle;
+            this.setLayoutX ( columnPosition*tileLength );
+            this.setLayoutY ( rowPosition*tileLength );
+            getChildren ().add ( rectangle );
+            if (tile.getPiece () instanceof Pawn)
+                this.setPiece ( new Pawn ( (Pawn) tile.getPiece () ) );
+            if (tile.getPiece () instanceof King)
+                this.setPiece ( new King ( (King) tile.getPiece () ) );
+            if (tile.getPiece () instanceof Queen)
+                this.setPiece ( new Queen ( (Queen) tile.getPiece () ) );
+            if (tile.getPiece () instanceof Bishop)
+                this.setPiece ( new Bishop ( (Bishop) tile.getPiece () ) );
+            if (tile.getPiece () instanceof Knight)
+                this.setPiece ( new Knight ( (Knight) tile.getPiece () ) );
+            if (tile.getPiece () instanceof Rook)
+                this.setPiece ( new Rook ( (Rook) tile.getPiece () ) );
+        }
+
         public void highlightTile ( Color color ) {
             rectangle.setStrokeType( StrokeType.INSIDE );
             rectangle.setStrokeWidth(3);
-            rectangle.setStroke(color);
+            rectangle.setStroke(Color.TRANSPARENT);
             DropShadow ds = new DropShadow ( 20 , Color.AQUA );
             if (piece != null) {
                 piece.getImageView ( ).requestFocus ( );
@@ -449,8 +605,8 @@ public class ChessBoard extends Pane {
 
         public String getName (int row, int column) {
             String rowString = String.valueOf ( 8 - row );
-            char columnString = (char) (column + 17);
-            return rowString + columnString;
+            String columnString = Character.toString ((char) (column + 65));
+            return columnString + rowString;
         }
     }
 

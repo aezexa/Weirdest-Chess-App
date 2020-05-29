@@ -23,6 +23,14 @@ public class Pawn extends Piece{
 		imageView.setImage ( image );
 		super.setImageProperty ( );
 	}
+
+	public Pawn (Pawn pawn) {
+		super(pawn.owner , pawn.row, pawn.column);
+		name = pawn.name;
+		image = pawn.image;
+		imageView.setImage ( image );
+		super.setImageProperty ();
+	}
 	
 	@Override
 	public ImageView getImageView () {

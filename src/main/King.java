@@ -24,6 +24,14 @@ public class King extends Piece{
 		imageView.setImage ( image );
 		super.setImageProperty ( );
 	}
+
+	public King (King king) {
+		super(king.owner , king.row, king.column);
+		name = king.name;
+		image = king.image;
+		imageView.setImage ( image );
+		super.setImageProperty ();
+	}
 	
 	@Override
 	public ImageView getImageView () {

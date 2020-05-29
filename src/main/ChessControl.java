@@ -1,11 +1,5 @@
 package main;
 
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
-import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Control;
 import javafx.scene.control.SkinBase;
 import javafx.scene.image.Image;
@@ -15,19 +9,17 @@ import javafx.scene.layout.*;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
+import java.util.ArrayList;
 
 import static main.App.inGame;
 
-public class ChessControl extends Control  {
+public class ChessControl extends Control {
 
     private static BorderPane mainBorderPane;
     private static ChessBar chessBar;
     private static MoveBar moveBar;
-    private static ChessBoard chessBoard;
+    public static ChessBoard currentChessBoard;
 
     public ChessControl ( ) {
         setSkin ( new SkinBase <> ( this ) {
@@ -37,7 +29,7 @@ public class ChessControl extends Control  {
 
         chessBar = new ChessBar (  );
         moveBar = new MoveBar ();
-        chessBoard = new ChessBoard (chessBar, moveBar);
+        currentChessBoard = new ChessBoard (chessBar, moveBar);
         FileInputStream input = null;
         try {
             input = new FileInputStream ( new File ( "." ).getCanonicalPath () + File.separator + "src" + File.separator + "resources" + File.separator + "board.png" );
@@ -52,7 +44,7 @@ public class ChessControl extends Control  {
         boardImage.setY ( 100 );
         boardImage.setPreserveRatio ( true );
 
-        anchorPane.getChildren ().addAll ( boardImage , chessBar ,moveBar, chessBoard);
+        anchorPane.getChildren ().addAll ( boardImage , chessBar , moveBar, currentChessBoard );
         getChildren ().addAll ( anchorPane );
 
         chessBar.getExitButton ().setOnAction ( event -> endGame () );
@@ -69,8 +61,8 @@ public class ChessControl extends Control  {
     @Override
     public void resize ( double width , double height ) { //nmifhmm
         super.resize ( width , height - chessBarSize );
-        chessBoard.setTranslateY( chessBarSize >> 1 );
-        chessBoard.resize(width, height - chessBarSize);
+        currentChessBoard.setTranslateY( chessBarSize >> 1 );
+        currentChessBoard.resize(width, height - chessBarSize);
         chessBar.resize(width, chessBarSize);
         chessBar.setTranslateY(-(chessBarSize >> 1));
     }

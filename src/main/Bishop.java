@@ -26,6 +26,14 @@ public class Bishop extends Piece{
 		super.setImageProperty ( );
 
 	}
+
+	public Bishop (Bishop bishop) {
+		super(bishop.owner , bishop.row, bishop.column);
+		name = bishop.name;
+		image = bishop.image;
+		imageView.setImage ( image );
+		super.setImageProperty ();
+	}
 	
 	@Override
 	public ImageView getImageView () {

@@ -22,6 +22,14 @@ public class Knight extends Piece{
 		imageView.setImage ( image );
 		super.setImageProperty ( );
 	}
+
+	public Knight (Knight knight) {
+		super(knight.owner , knight.row, knight.column);
+		name = knight.name;
+		image = knight.image;
+		imageView.setImage ( image );
+		super.setImageProperty ();
+	}
 	
 	@Override
 	public ImageView getImageView () {

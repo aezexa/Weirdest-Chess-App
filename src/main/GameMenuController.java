@@ -28,6 +28,8 @@ public class GameMenuController {
     @FXML
     private TextField limitField;
 
+    public static int limit;
+
     @FXML
     private void newGameButtonAction () throws IOException {
         Parent root = getFXMLLoader ( "newGameInputScreen" ).load ( );
@@ -42,7 +44,6 @@ public class GameMenuController {
     private void newGameScreenAcceptAction () {
         String name = blackUserField.getText ( );
         String limitString = limitField.getText ( );
-        int limit;
         if ( !hasNewGameErrors ( name , limitString ) ) {
             limit = Integer.parseInt ( limitString );
             User.setBlackUser ( User.getUserWithName ( name ) );

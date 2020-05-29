@@ -22,6 +22,14 @@ public class Rook extends Piece {
 		imageView.setImage ( image );
 		super.setImageProperty ( );
 	}
+
+	public Rook (Rook rook) {
+		super(rook.owner , rook.row, rook.column);
+		name = rook.name;
+		image = rook.image;
+		imageView.setImage ( image );
+		super.setImageProperty ();
+	}
 	
 	@Override
 	public ImageView getImageView () {
