@@ -20,8 +20,14 @@ public class Timer {
 		public void handle ( ActionEvent event ) {
 //			if (playerTurn == 1 && !timeIsOver && !chessboard.checkmate && !chessboard.stalemate)
 			User user = chessboard.getTurnUser ( );
-			user.secondPass ( );
-			chessboard.getChessBar ( ).setTimer ( user.getName ( ) + "'s timer: " + TimeUnit.SECONDS.toMinutes ( user.getTimer ( ) ) + ":" + (user.getTimer ( ) % 60) );
+			if (!timeIsOver) {
+				user.secondPass ( );
+				chessboard.getChessBar ( ).setTimer ( user.getName ( ) + "'s timer: " + TimeUnit.SECONDS.toMinutes ( user.getTimer ( ) ) + ":" + (user.getTimer ( ) % 60) );
+			}
+			if (!timeIsOver && (chessboard.whiteUser.getTimer () == 0 || chessboard.blackUser.getTimer () == 0)) {
+				timeIsOver = true;
+				chessboard.timerOver ( user );
+			}
 //			if (chessboard.getTurnUser () == User.getWhiteUser ())
 //			{
 //				whiteTimer -= 1;

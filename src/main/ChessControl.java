@@ -75,7 +75,7 @@ public class ChessControl extends Control {
         chessBar.setTranslateY(-(chessBarSize >> 1));
     }
 
-    private void endGame () {
+    public static void endGame () {
         App.currentScene = App.appScene;
         App.currentStage.setScene ( App.appScene );
         App.setRoot ( "gameMenuScreen" );

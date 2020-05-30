@@ -96,7 +96,9 @@ public class RegisterController implements Initializable {
         button.setAlignment ( Pos.CENTER );
         registrationCompleted.getChildren ().addAll ( imageView , text, button );
         registrationCompletedStage = new Stage (  );
+        registrationCompletedStage.setTitle ( "Congrats!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" );
         registrationCompletedStage.setScene ( new Scene ( registrationCompleted ) );
+        registrationCompletedStage.initModality ( Modality.APPLICATION_MODAL );
 
         button.setOnAction ( event -> destroyButtonAction () );
 
