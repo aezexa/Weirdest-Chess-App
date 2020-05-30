@@ -32,8 +32,15 @@ public class Queen extends Piece {
 	public ImageView getImageView () {
 		return (imageView);
 	}
-	
-//	@Override
+
+	@Override
+	public boolean canMove ( int rowStart , int rowEnd , int columnStart , int columnEnd , ChessBoard.Tile[][] board ) {
+//		return (new Rook (  )).canMove ( rowStart,rowEnd,columnStart,columnEnd,board ) || (new Bishop (  )).canMove ( rowStart, rowEnd, columnStart, columnEnd, board );
+		return canMoveDiagonally ( rowStart, rowEnd, columnStart, columnEnd, board ) ||
+				canMoveStraightforward ( rowStart, rowEnd, columnStart, columnEnd, board );
+	}
+
+	//	@Override
 //	public void SelectPiece(ChessBoard chessBoard) {
 //		chessBoard.colorSquare(this.xPos, this.yPos, true);
 //		// Bishop ability

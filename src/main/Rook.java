@@ -9,7 +9,10 @@ public class Rook extends Piece {
 //	private int yPos;
 //	private int type;
 	private Image image;
-//	private ImageView imageView = new ImageView(); 
+//	private ImageView imageView = new ImageView();
+	int bigger;
+	int smaller;
+
 
 	public Rook ( User user, int row, int column) {
 		super(user, row, column);
@@ -30,13 +33,18 @@ public class Rook extends Piece {
 		imageView.setImage ( image );
 		super.setImageProperty ();
 	}
-	
+
 	@Override
 	public ImageView getImageView () {
 		return (imageView);
 	}
-	
-//	@Override
+
+	@Override
+	public boolean canMove ( int rowStart , int rowEnd , int columnStart , int columnEnd , ChessBoard.Tile[][] board ) {
+		return canMoveStraightforward ( rowStart, rowEnd, columnStart, columnEnd, board );
+	}
+
+	//	@Override
 //	public void SelectPiece(ChessBoard chessBoard) {
 //		chessBoard.colorSquare(this.xPos, this.yPos, true);
 //		if (chessBoard.checkState && !this.isASavior)

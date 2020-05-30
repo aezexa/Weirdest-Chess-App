@@ -1,5 +1,6 @@
 package main;
 
+import javafx.animation.Timeline;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -41,6 +42,7 @@ public class ChessBoard extends Pane {
     User blackUser;
     public static ArrayList<ChessBoard> states;
     public ArrayList<String> history;
+    Timer timer;
 
     public ChessBoard (ChessBar chessBar, MoveBar moveBar) {
         this.setLayoutX ( 0 );
@@ -54,8 +56,14 @@ public class ChessBoard extends Pane {
         whiteUser = getWhiteUser ();
         blackUser = getBlackUser ();
         movesUnlimited = (GameMenuController.limit == 0);
-        initializeGame ();
 
+        initializeGame ();
+        
+        timer = new Timer ( this );
+        whiteUser.setTimer ( 3600 );
+        blackUser.setTimer ( 3600 );
+        timer.timeline.setCycleCount ( Timeline.INDEFINITE );
+        timer.timeline.play ();
     }
 
     public ChessBoard (ChessBoard chessBoard) {
@@ -142,6 +150,8 @@ public class ChessBoard extends Pane {
         states.add ( new ChessBoard ( this ) );
 
         mouseDragOption ();
+
+
 
     }
 
@@ -300,6 +310,8 @@ public class ChessBoard extends Pane {
                 gameOver = true;
             }
 
+            getChildren ().remove ( getEndTile ().getPiece ().imageView );
+
         }
 
         history.add ( moveString );
@@ -325,7 +337,7 @@ public class ChessBoard extends Pane {
     }
 
     private boolean hasMoveErrors ( ) {
-        if ( !getStartTile ().getPiece ().canMove ( startRow , endRow , startColumn , endColumn ) || !isDifferentColor () ) {
+        if ( !isDifferentColor () || !getStartTile ().getPiece ().canMove ( startRow , endRow , startColumn , endColumn, board )) {
             System.out.println ( "cannot move to the spot" );
             return true;
         }
@@ -457,14 +469,14 @@ public class ChessBoard extends Pane {
             endRow = (int) (mouseEvent.getY ()/tileHeight);
             unhighlightTiles ();
             getEndTile ().highlightTile ( Color.BLACK );
-            System.out.println ( "selected row : " + endRow );
-            System.out.println ( "selected column : " + endColumn );
-            System.out.println ( "selected piece : " + getEndTile ().getPiece () );
+            System.out.println ( "end row : " + endRow );
+            System.out.println ( "end column : " + endColumn );
+            System.out.println ( "end piece : " + getEndTile ().getPiece () );
             selectPiece ();
 
             if (isPieceSelected) {
-                System.out.println ( "selected row to move : " + startRow );
-                System.out.println ( "selected column to move : " + startColumn );
+                System.out.println ( "start row : " + startRow );
+                System.out.println ( "start column : " + startColumn );
             }
             mouseEvent.setDragDetect ( true );
         } );
@@ -513,6 +525,20 @@ public class ChessBoard extends Pane {
             stringBuilder.append ( "\n" ).append ( history.get ( i ) );
         }
         return stringBuilder.toString ();
+    }
+
+    void timerOver (User user) {
+        timer.timeline.stop();
+        if (user == getWhiteUser ())
+        {
+//            statusBar.whitePlayerAlert.setText("White player run out of time");
+//            statusBar.winner.setText("Black player won !");
+        }
+        else if (user == getBlackUser ())
+        {
+//            statusBar.blackPlayerAlert.setText("Black player run out of time");
+//            statusBar.winner.setText("White player won !");
+        }
     }
 
 
@@ -608,8 +634,14 @@ public class ChessBoard extends Pane {
             String columnString = Character.toString ((char) (column + 65));
             return columnString + rowString;
         }
+
+        public boolean isEmpty () {
+            return piece == null;
+        }
     }
 
-
+    public ChessBar getChessBar () {
+        return chessBar;
+    }
 }
 

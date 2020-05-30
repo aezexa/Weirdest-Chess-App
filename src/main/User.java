@@ -6,6 +6,7 @@ public class User {
     public static ArrayList<User> allUsers = new ArrayList <> (  );
     private static User whiteUser;
     private static User blackUser;
+    private int timer;
     private String name;
     private String password;
     private int score;
@@ -57,6 +58,18 @@ public class User {
                 return user;
         }
         return null;
+    }
+
+    public void secondPass () {
+        timer--;
+    }
+
+    public int getTimer () {
+        return timer;
+    }
+
+    public void setTimer ( int timer ) {
+        this.timer = timer;
     }
 
     int getScore () {

@@ -8,6 +8,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.text.Text;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -24,10 +25,19 @@ public class ChessScreen implements Initializable {
     public void initialize ( URL url , ResourceBundle resourceBundle ) {
         screen = new StackPane (  );
         chessControl = new ChessControl ();
-        screen.getChildren ().add ( chessControl );
+
 
         screen.setPrefSize ( 600, 700 );
 
+//        screen.setLayoutX ( 12 );
+//        screen.setLayoutY ( -10 );
+//
+//        Text text = new Text ( "1" );
+//        text.setLayoutX ( 0 );
+//        text.setLayoutY ( 20 );
+
+
+        screen.getChildren ().addAll ( chessControl );
         App.currentStage.setScene (  new Scene ( screen , 900, 700 ) );
         App.currentStage.centerOnScreen ();
 

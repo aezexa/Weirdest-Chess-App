@@ -1,8 +1,6 @@
 package main;
 
 import javafx.geometry.HPos;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -18,12 +16,12 @@ public class ChessBar extends HBox {
         this.setPrefSize ( 600,100 );
         this.setMaxSize ( 600,100 );
         barScreen = new GridPane ();
-        resetButton = new Button ( "Reset" );
-        resetButton.setPrefWidth ( 200 );
-        resetButton.setPrefHeight ( 50 );
-        resetButton.setOnMouseEntered(e -> resetButton.setBorder ( new Border(new BorderStroke(Color.BLACK,
+        forfeitButton = new Button ( "Forfeit" );
+        forfeitButton.setPrefWidth ( 200 );
+        forfeitButton.setPrefHeight ( 50 );
+        forfeitButton.setOnMouseEntered( e -> forfeitButton.setBorder ( new Border(new BorderStroke(Color.BLACK,
                 BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths ( 3 ))) ));
-        resetButton.setOnMouseExited(e -> resetButton.setBorder ( new Border(new BorderStroke(Color.TRANSPARENT,
+        forfeitButton.setOnMouseExited( e -> forfeitButton.setBorder ( new Border(new BorderStroke(Color.TRANSPARENT,
                 BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)) ));
 
 
@@ -54,7 +52,7 @@ public class ChessBar extends HBox {
         turn = new Label ( "" );
         timer = new Label ( "" );
         barScreen.addColumn ( 0 , new Label ( "Turn" ) , turn );
-        barScreen.addColumn ( 1 , resetButton , exitButton );
+        barScreen.addColumn ( 1 , forfeitButton , exitButton );
         barScreen.addColumn ( 2 , new Label ( "Time Left" ) , timer );
 
         for (Node child : barScreen.getChildren ( )) {
@@ -71,13 +69,21 @@ public class ChessBar extends HBox {
         turn.setText ( username );
     }
 
+    public void setTimer (String text) {
+        timer.setText ( text );
+    }
+
     public Label turn;
     public Label timer;
     private GridPane barScreen;
-    private Button resetButton;
+    private Button forfeitButton;
     private Button exitButton;
 
     public Button getExitButton () {
         return exitButton;
+    }
+
+    public Button getForfeitButton () {
+        return forfeitButton;
     }
 }

@@ -9,7 +9,10 @@ public class Pawn extends Piece{
 //	private int yPos;
 //	private int type;
 	private Image image;
-//	private ImageView imageView = new ImageView(); 
+//	private ImageView imageView = new ImageView();
+	int bigger;
+	int smaller;
+	boolean canBeEnPassanted;
 	
 	public Pawn ( User user, int row, int column) {
 		super(user, row, column);
@@ -35,6 +38,75 @@ public class Pawn extends Piece{
 	@Override
 	public ImageView getImageView () {
 		return (imageView);
+	}
+
+	@Override
+	public boolean canMove ( int rowStart , int rowEnd , int columnStart , int columnEnd, ChessBoard.Tile[][] board ) {
+		boolean isFirst = isFirstTime;
+		isFirstTime = false;
+
+		//move restrictions
+		if ( Math.abs ( rowEnd - rowStart ) > 2 || Math.abs ( columnEnd - columnStart ) > 1 || rowEnd == rowStart )
+			return false;
+
+		//the way it moves
+		if ( isWhite () ) {
+			if ( rowEnd > rowStart )
+				return false;
+		} else if ( isBlack () ) {
+			if ( rowEnd < rowStart )
+				return false;
+		}
+
+		if ( columnStart != columnEnd ) {
+			//wants to hit
+			if ( Math.abs ( rowEnd - rowStart ) == 2 )
+				return false;
+//			if (canEnPassant ()) { //en passant
+//				return true;
+//			}
+			if (board[rowEnd][columnEnd].isEmpty ())
+				return false;
+			return true;
+		} else {
+			//wants to move forward
+			sorter ( rowStart , rowEnd );
+			if ( isWhite () ) {
+				if ( rowStart == 6 && Math.abs ( rowEnd - rowStart ) == 2 ) { //two squares
+					canBeEnPassanted = true;
+					return board[rowStart - 1][columnStart].isEmpty () &&
+							board[rowStart - 2][columnStart].isEmpty ();
+				} else if ( Math.abs ( rowEnd - rowStart ) == 1 ) { //one square
+					return board[rowStart - 1][columnStart].isEmpty ();
+				}
+			} else if ( isBlack () ) {
+				if ( rowStart == 1 && Math.abs ( rowStart - rowEnd ) == 2 ) { //two squares
+					canBeEnPassanted = true;
+					return board[rowStart + 1][columnStart].isEmpty () &&
+							board[rowStart + 2][columnStart].isEmpty ();
+
+				} else if ( Math.abs ( rowStart - rowEnd ) == 1 ) { //one square
+					return board[rowStart + 1][columnStart].isEmpty ();
+
+				}
+			}
+		}
+		return false;
+	}
+
+//	private boolean canEnPassant () {
+//		return true;
+//	}
+
+	private void sorter ( int first , int second ) {
+		if ( first > second ) {
+			bigger = first;
+			smaller = second;
+		} else {
+			smaller = first;
+			bigger = second;
+		}
+
 	}
 
 	//	@Override

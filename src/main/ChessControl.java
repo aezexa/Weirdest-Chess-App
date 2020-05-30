@@ -54,7 +54,7 @@ public class ChessControl extends Control {
                 endGame ();
         } );
 
-//        chessBar.getResetButton().setOnAction ( event -> chessBoard.resetGame() );
+//        chessBar.getForfeitButton ().setOnAction ( event ->  );
 
     }
 

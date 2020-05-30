@@ -37,7 +37,7 @@ public class Knight extends Piece{
 	}
 
 	@Override
-	public boolean canMove (int rowStart, int rowEnd, int columnStart, int columnEnd) {
+	public boolean canMove (int rowStart, int rowEnd, int columnStart, int columnEnd, ChessBoard.Tile[][] board) {
 		return (Math.abs ( rowStart - rowEnd ) == 2 && Math.abs ( columnStart - columnEnd ) == 1)
 				|| (Math.abs ( rowStart - rowEnd ) == 1 && Math.abs ( columnStart - columnEnd ) == 2);
 	}

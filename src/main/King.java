@@ -37,8 +37,13 @@ public class King extends Piece{
 	public ImageView getImageView () {
 		return (imageView);
 	}
-	
-//	@Override
+
+	@Override
+	public boolean canMove ( int rowStart , int rowEnd , int columnStart , int columnEnd , ChessBoard.Tile[][] board ) {
+		return Math.abs ( rowEnd - rowStart ) <= 1 && Math.abs ( columnEnd - columnStart ) <= 1;
+	}
+
+	//	@Override
 //	public void SelectPiece(ChessBoard chessBoard) {
 //		int x = this.xPos;
 //		int y = this.yPos;

@@ -10,6 +10,10 @@ public class Bishop extends Piece{
 //	private int type;
 	private Image image;
 //	private ImageView imageView = new ImageView();
+	int biggerRow;
+	int biggerColumn;
+	int smallerRow;
+	int smallerColumn;
 
 	public Bishop ( User user, int row, int column) {
 		super(user, row, column);
@@ -34,13 +38,18 @@ public class Bishop extends Piece{
 		imageView.setImage ( image );
 		super.setImageProperty ();
 	}
-	
+
 	@Override
 	public ImageView getImageView () {
 		return (imageView);
 	}
-	
-//	@Override
+
+	@Override
+	public boolean canMove ( int rowStart , int rowEnd , int columnStart , int columnEnd , ChessBoard.Tile[][] board ) {
+		return canMoveDiagonally ( rowStart , rowEnd , columnStart , columnEnd , board );
+	}
+
+	//	@Override
 //	public void SelectPiece(ChessBoard chessBoard) {
 //		int y = this.yPos + 1;
 //		chessBoard.colorSquare(this.xPos, this.yPos, true);
