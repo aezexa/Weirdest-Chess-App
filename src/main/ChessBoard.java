@@ -45,8 +45,6 @@ public class ChessBoard extends Pane {
     boolean hasUsedUndo;
     boolean prevOppositeTurnOwnership;
     boolean hadKill;
-    boolean movesUnlimited;
-    boolean gameOver;
     boolean isCheckMate;
     ChessBar chessBar;
     MoveBar moveBar;
@@ -63,9 +61,10 @@ public class ChessBoard extends Pane {
         this.setPrefWidth ( 600.0 );
         this.chessBar = chessBar;
         this.moveBar = moveBar;
+        setWhiteUser ( new User ( "Alireza", "1" ) );
+        setBlackUser ( new User ( "Mahdi", "1" ) );
         whiteUser = getWhiteUser ();
         blackUser = getBlackUser ();
-//        movesUnlimited = (GameMenuController.limit == 0);
         limit = GameMenuController.limit;
 
         initializeGame ();
@@ -319,6 +318,7 @@ public class ChessBoard extends Pane {
         getEndTile ().setPiece ( getStartTile ().getPiece () );
         getStartTile ().setPiece ( null );
 
+        unhighlightTiles ();
         getEndTile ().highlightTile ( Color.BLACK );
         getEndTile ().getPiece ().getImageView ().setLayoutX ( 75* endColumn + 7.5 );
         getEndTile ().getPiece ().getImageView ().setLayoutY ( 75* endRow + 7.5 );
@@ -331,17 +331,17 @@ public class ChessBoard extends Pane {
     }
 
     private boolean hasMoveErrors ( ) {
-        if ( !isDifferentColor () || !getStartTile ().getPiece ().canMove ( startRow , endRow , startColumn , endColumn, board )) {
+        if ( !isDifferentColor (endRow,endColumn) || !getStartTile ().getPiece ().canMove ( startRow , endRow , startColumn , endColumn, board )) {
             System.out.println ( "cannot move to the spot" );
             return true;
         }
         return false;
     }
 
-    boolean isDifferentColor () {
-        if (getEndTile ().getPiece () == null)
+    boolean isDifferentColor (int i, int j) {
+        if (board[i][j].getPiece () == null)
             return true;
-        return getStartTile ().getPiece ().getOwner () != getEndTile ().getPiece ().getOwner ();
+        return getStartTile ().getPiece ().getOwner () != board[i][j].getPiece ().getOwner ();
     }
 
     void acceptDrag() {
@@ -360,6 +360,13 @@ public class ChessBoard extends Pane {
     void beginDrag() {
         setOnDragDetected( mouseEvent -> {
             startFullDrag();
+            unhighlightTiles ();
+            Rectangle rectangle = board[startRow][startColumn].rectangle;
+            rectangle.setStroke ( Color.BLACK );
+            rectangle.setStrokeWidth ( 3 );
+            rectangle.setStrokeType ( StrokeType.INSIDE );
+
+            highlightPossibleTiles ();
             System.out.println ( "Event on Source: drag detected + " + endRow + " " + endColumn );
             startColumn = (int) (mouseEvent.getX ()/tileWidth);
             startRow = (int) (mouseEvent.getY ()/tileHeight);
@@ -381,7 +388,6 @@ public class ChessBoard extends Pane {
             setMouseTransparent(false);
             System.out.println ( "Event on Source: mouse released + " + endRow + " " + endColumn );
             System.out.println ( "\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014" );
-            unhighlightTiles ();
             if (isPieceHere ()) {
                 if ( isPieceSelected && !isSameTile ( ) && !hasMoveErrors ( )) {
                     acceptDrag ( );
@@ -412,8 +418,6 @@ public class ChessBoard extends Pane {
 
             endColumn = (int) (mouseEvent.getX ()/tileWidth);
             endRow = (int) (mouseEvent.getY ()/tileHeight);
-            unhighlightTiles ();
-            getEndTile ().highlightTile ( Color.BLACK );
             System.out.println ( "end row : " + endRow );
             System.out.println ( "end column : " + endColumn );
             System.out.println ( "end piece : " + getEndTile ().getPiece () );
@@ -451,6 +455,20 @@ public class ChessBoard extends Pane {
         } );
         System.out.println ( "\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014" );
 
+    }
+
+    void highlightPossibleTiles () {
+        Rectangle rectangle;
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (isDifferentColor (i,j) && board[startRow][startColumn].getPiece ().canMove ( startRow, i, startColumn, j , board)) {
+                    rectangle = board[i][j].rectangle;
+                    rectangle.setStroke ( Color.GREEN );
+                    rectangle.setStrokeWidth ( 3 );
+                    rectangle.setStrokeType ( StrokeType.INSIDE );
+                }
+            }
+        }
     }
 
     Tile getStartTile () {
@@ -638,7 +656,7 @@ public class ChessBoard extends Pane {
         public void highlightTile ( Color color ) {
             rectangle.setStrokeType( StrokeType.INSIDE );
             rectangle.setStrokeWidth(3);
-            rectangle.setStroke(Color.TRANSPARENT);
+            rectangle.setStroke(Color.BLACK);
             DropShadow ds = new DropShadow ( 20 , Color.AQUA );
             if (piece != null) {
                 piece.getImageView ( ).requestFocus ( );
