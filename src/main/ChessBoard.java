@@ -51,8 +51,6 @@ public class ChessBoard extends Pane {
         this.setPrefWidth ( 600.0 );
         this.chessBar = chessBar;
         this.moveBar = moveBar;
-        User.setWhiteUser ( new User ( "Alireza", "1" ) );
-        User.setBlackUser ( new User ( "Alireza's Enemy", "1" ) );
         whiteUser = getWhiteUser ();
         blackUser = getBlackUser ();
         movesUnlimited = (GameMenuController.limit == 0);

@@ -54,7 +54,15 @@ public class ChessControl extends Control {
                 endGame ();
         } );
 
-//        chessBar.getForfeitButton ().setOnAction ( event ->  );
+        chessBar.getForfeitButton ().setOnAction ( event -> {
+            System.out.println ( "What a loser!" );
+            System.out.println ( currentChessBoard.getOppositeTurnUser ().getName () + " won!" );
+            currentChessBoard.getOppositeTurnUser ().addWins ();
+            currentChessBoard.getOppositeTurnUser ().addScore ( 2 );
+            currentChessBoard.getTurnUser ( ).addLosses ( );
+            currentChessBoard.getTurnUser ( ).addScore ( -1 );
+            endGame ();
+        });
 
     }
 

@@ -1,6 +1,10 @@
 package main;
 
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class User {
     public static ArrayList<User> allUsers = new ArrayList <> (  );
@@ -140,29 +144,93 @@ public class User {
         isTurn = turn;
     }
 
-    public void addToMoveHistory ( String string ) {
-        moveHistory.add ( string );
+    static class scoreboardSorter implements Comparator < User > {
+        public int compare ( User user1 , User user2 ) {
+            int scoreResult;
+            if ( (scoreResult = Integer.compare ( user1.getScore ( ) , user2.getScore ( ) )) != 0 )
+                return -1 * scoreResult;
+            else {
+                int winResult;
+                if ( (winResult = Integer.compare ( user1.getWins ( ) , user2.getWins ( ) )) != 0 )
+                    return -1 * winResult;
+                else {
+                    int drawResult;
+                    if ( (drawResult = Integer.compare ( user1.getDraws ( ) , user2.getDraws ( ) )) != 0 )
+                        return -1 * drawResult;
+                    else {
+                        int lossesResult;
+                        if ( (lossesResult = Integer.compare ( user1.getLosses ( ) , user2.getLosses ( ) )) != 0 )
+                            return lossesResult;
+                        else
+                            return user1.getName ( ).compareTo ( user2.getName ( ) );
+                    }
+                }
+            }
+        }
     }
 
-    public void removeFromMoveHistory () {
-        moveHistory.remove ( moveHistory.size ( ) - 1 );
+    private SimpleIntegerProperty rankProperty;
+    private SimpleStringProperty nameProperty;
+    private SimpleIntegerProperty scoreProperty;
+    private SimpleIntegerProperty winsProperty;
+    private SimpleIntegerProperty drawsProperty;
+    private SimpleIntegerProperty lossesProperty;
+
+    public void makeScoreboardCompatible ( int rank ) {
+        this.rankProperty = new SimpleIntegerProperty ( rank );
+        this.nameProperty = new SimpleStringProperty ( name );
+        this.scoreProperty = new SimpleIntegerProperty ( score );
+        this.winsProperty = new SimpleIntegerProperty ( wins );
+        this.drawsProperty = new SimpleIntegerProperty ( draws );
+        this.lossesProperty = new SimpleIntegerProperty ( losses );
     }
 
-    public void addToKillHistory ( String string ) {
-        killHistory.add ( string );
+    public void setRankProperty ( int rankProperty ) {
+        this.rankProperty.set ( rankProperty );
     }
 
-    public void removeFromKillHistory () {
-        killHistory.remove ( killHistory.size ( ) - 1 );
+    public int getRankProperty () {
+        return rankProperty.get ( );
     }
 
-    public void clearMoveAndKillHistory () {
-        moveHistory.clear ( );
-        killHistory.clear ( );
+    public void setNameProperty ( String nameProperty ) {
+        this.nameProperty.set ( nameProperty );
     }
 
-    void remove () {
-        System.out.println ( "removed " + name + " successfully" );
+    public void setScoreProperty ( int scoreProperty ) {
+        this.scoreProperty.set ( scoreProperty );
+    }
+
+    public void setWinsProperty ( int winsProperty ) {
+        this.winsProperty.set ( winsProperty );
+    }
+
+    public void setDrawsProperty ( int drawsProperty ) {
+        this.drawsProperty.set ( drawsProperty );
+    }
+
+    public void setLossesProperty ( int lossesProperty ) {
+        this.lossesProperty.set ( lossesProperty );
+    }
+
+    public String getNameProperty () {
+        return nameProperty.get ( );
+    }
+
+    public int getScoreProperty () {
+        return scoreProperty.get ( );
+    }
+
+    public int getWinsProperty () {
+        return winsProperty.get ( );
+    }
+
+    public int getDrawsProperty () {
+        return drawsProperty.get ( );
+    }
+
+    public int getLossesProperty () {
+        return lossesProperty.get ( );
     }
 
 }
