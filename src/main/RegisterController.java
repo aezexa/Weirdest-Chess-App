@@ -23,14 +23,11 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
 import java.util.regex.Pattern;
 
 import static main.App.*;
 
-public class RegisterController implements Initializable {
+public class RegisterController {
 
     private static final Pattern userPassFormatPattern = Pattern.compile ( "\\w+" );
 
@@ -49,43 +46,37 @@ public class RegisterController implements Initializable {
 
     private Stage registrationCompletedStage;
 
-    ScreensController myController;
-
     static MediaPlayer mediaPlayer;
 
     ImageView imageView = new ImageView ( new Image ( "/resources/registrationCompleted.jpg" ) );
 
 
     @FXML
-    private void registerButtonAction () throws IOException {
+    private void registerButtonAction () {
 
         String name = usernameField.getText ();
         String password = passwordField.getText ();
 
-//        Parent root = getFXMLLoader ( "registrationCompletedScreen" ).load ();
-//        Stage window = new Stage ( );
-//        window.setTitle ( "Registration Completed!!1" );
-//        Scene scene = new Scene ( root );
-//        scene.addEventFilter( MouseEvent.MOUSE_PRESSED, mouseEvent -> sound () );
-//        window.setScene ( scene );
-//        window.initModality ( Modality.APPLICATION_MODAL );
-
         AnchorPane registrationCompleted = new AnchorPane (  );
+
         Text text = new Text ( "NICE BRO!\n" +
                 "Registration Completed!!!11!" );
         text.setStyle ( "-fx-font-weight: bold" );
         text.setStroke ( Color.BLACK );
         text.setStrokeWidth ( 0.5 );
+
         BoxBlur bb = new BoxBlur (  );
         bb.setWidth ( 5 );
         bb.setHeight ( 5 );
         bb.setIterations ( 3 );
         imageView.setEffect ( bb );
+
         text.setFont ( Font.font ( "Comic Sans MS" , 24 ) );
         text.setFill ( Color.valueOf ( "#1cbd4c" ) );
         text.setLayoutX ( 84 );
         text.setLayoutY ( 209 );
         text.setTextAlignment ( TextAlignment.CENTER );
+
         Button button = new Button ( "Please Let Me Just Enter The App" );
         button.setTextAlignment ( TextAlignment.CENTER );
         button.setPrefWidth ( 225.6 );
@@ -93,6 +84,7 @@ public class RegisterController implements Initializable {
         button.setLayoutX ( 124 );
         button.setLayoutY ( 346 );
         button.setAlignment ( Pos.CENTER );
+
         registrationCompleted.getChildren ().addAll ( imageView , text, button );
         registrationCompletedStage = new Stage (  );
         registrationCompletedStage.setTitle ( "Congrats!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" );
@@ -144,14 +136,7 @@ public class RegisterController implements Initializable {
 
     @FXML
     private void destroyButtonAction () {
-//        Stage stage = (Stage) destroyButton.getScene().getWindow();
         mediaPlayer.stop ();
-//        stage.close ();
         registrationCompletedStage.close ();
-    }
-
-    @Override
-    public void initialize ( URL url , ResourceBundle resourceBundle ) {
-
     }
 }

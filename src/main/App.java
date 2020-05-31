@@ -42,11 +42,7 @@ public class App extends Application {
 
 //        startChess ( stage );
         startGame ( stage );
-    }
 
-
-    static void setRoot(Parent root) {
-        currentScene.setRoot( root );
     }
 
     static void setRoot(String fxml) {

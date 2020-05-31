@@ -9,6 +9,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -46,15 +47,7 @@ public class MainController implements Initializable {
         window.showAndWait ();
     }
 
-    @FXML private void deleteAccountAcceptButtonAction () {
-        User user = User.getUserWithName ( usernameField.getText () );
-        if (user == null) {
-            App.error ( "This Person Isn't Real Yet." );
-            return;
-        }
-        User.allUsers.remove ( user );
-        destroyButtonAction ();
-    }
+
 
     @FXML private void changePasswordButtonAction ( ) throws IOException {
         Parent root = getFXMLLoader ( "changePasswordScreen" ).load ();
@@ -66,18 +59,7 @@ public class MainController implements Initializable {
         window.initModality ( Modality.APPLICATION_MODAL );
         window.showAndWait ();
     }
-    @FXML private void changePasswordAcceptButtonAction () {
-        User user = User.getUserWithName ( usernameField.getText () );
-        if (user == null)
-            App.error ( "This Person Isn't Real Yet." );
-        else if (user.getPassword ().equals ( passwordField.getText () )) {
-            user.setPassword ( newPasswordField.getText ( ) );
-            destroyButtonAction ();
-        }
-        else
-            App.error ( "Wrong Password" );
 
-    }
 
     @FXML private void playPauseAction () {
 
@@ -100,11 +82,6 @@ public class MainController implements Initializable {
             isDumb = false;
     }
 
-    @FXML private void destroyButtonAction () {
-        Stage stage = (Stage) destroyButton.getScene().getWindow();
-        stage.close ();
-    }
-
     @FXML
     private void exitButton () {
         if ( ConfirmBox.display ( "You Boutta Finish This Thing" , "Are You Sure You Finna Finish This Thing?" ) )
@@ -113,11 +90,13 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize ( URL url , ResourceBundle resourceBundle ) {
+
         if (isPaused) {
             playPauseImageView.setImage ( playImage );
         }
         else {
             playPauseImageView.setImage ( pauseImage );
         }
+
     }
 }

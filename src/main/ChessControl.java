@@ -84,6 +84,5 @@ public class ChessControl extends Control {
         inGame = false;
     }
 
-
-    private int chessBarSize = 200; //chie?
+    private int chessBarSize = 200;
 }

@@ -26,16 +26,7 @@ public class ChessScreen implements Initializable {
         screen = new StackPane (  );
         chessControl = new ChessControl ();
 
-
         screen.setPrefSize ( 600, 700 );
-
-//        screen.setLayoutX ( 12 );
-//        screen.setLayoutY ( -10 );
-//
-//        Text text = new Text ( "1" );
-//        text.setLayoutX ( 0 );
-//        text.setLayoutY ( 20 );
-
 
         screen.getChildren ().addAll ( chessControl );
         App.currentStage.setScene (  new Scene ( screen , 900, 700 ) );

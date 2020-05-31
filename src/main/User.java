@@ -11,17 +11,14 @@ public class User {
     private static User whiteUser;
     private static User blackUser;
     private int timer;
-    private String name;
+    private final String name;
     private String password;
     private int score;
     private int wins;
     private int draws;
     private int losses;
     private boolean isTurn;
-    private boolean[][] userOwnership = new boolean[8][8];
     private int remainingUndo = 2;
-    private ArrayList < String > moveHistory = new ArrayList <> ( );
-    private ArrayList < String > killHistory = new ArrayList <> ( );
 
     User ( String name , String password ) {
         this.name = name;
@@ -96,18 +93,6 @@ public class User {
         return remainingUndo;
     }
 
-    public ArrayList < String > getMoveHistory () {
-        return moveHistory;
-    }
-
-    public ArrayList < String > getKillHistory () {
-        return killHistory;
-    }
-
-    public boolean userOwnsSquare ( int row , int column ) {
-        return userOwnership[row][column];
-    }
-
     public boolean isTurn () {
         return isTurn;
     }
@@ -130,10 +115,6 @@ public class User {
 
     public void setRemainingUndo ( int remainingUndo ) {
         this.remainingUndo = remainingUndo;
-    }
-
-    public void setUserOwnsSquare ( int row , int column , boolean type ) {
-        userOwnership[row][column] = type;
     }
 
     public void reduceUndo () {

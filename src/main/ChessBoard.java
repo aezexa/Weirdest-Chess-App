@@ -28,7 +28,6 @@ import static main.User.*;
 
 public class ChessBoard extends Pane {
 
-    private BorderPane mainBorderPane;
     private final int BORDER_WIDTH = 600;
     private final int BORDER_HEIGHT = 600;
     private final int tileNum = 8;
@@ -42,10 +41,8 @@ public class ChessBoard extends Pane {
     private int startColumn;
     private int limit;
     boolean hasMoved;
-    boolean hasUsedUndo;
     boolean prevOppositeTurnOwnership;
     boolean hadKill;
-    boolean isCheckMate;
     ChessBar chessBar;
     MoveBar moveBar;
     User whiteUser;
@@ -146,14 +143,9 @@ public class ChessBoard extends Pane {
                 if (row == 0 || row == 1 || row == 6 || row == 7)
                     getChildren ().add ( board[row][column].getPiece ().getImageView () );
 
-//        getWhiteUser ().setRemainingUndo ( 2 );
-//        getBlackUser ().setRemainingUndo ( 2 );
-
         states.add ( new ChessBoard ( this ) );
 
         mouseDragOption ();
-//        mouseClickOption ();
-
 
     }
 
@@ -177,7 +169,6 @@ public class ChessBoard extends Pane {
         }
 
         updateUndoHistory ( stateNumber );
-        board[0][0].rectangle.setStroke ( Color.BLACK );
 
         whiteUser.setTurn ( states.size ()%2 != 0 );
         blackUser.setTurn ( states.size ()%2 == 0 );
@@ -317,8 +308,6 @@ public class ChessBoard extends Pane {
         getEndTile ().getPiece ().row = endRow;
         getEndTile ().getPiece ().column = endColumn;
 
-        //change ownership
-//        changeOwnershipOfTile ( );
     }
 
     private boolean hasMoveErrors ( ) {
