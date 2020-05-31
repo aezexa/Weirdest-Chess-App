@@ -61,8 +61,6 @@ public class ChessBoard extends Pane {
         this.setPrefWidth ( 600.0 );
         this.chessBar = chessBar;
         this.moveBar = moveBar;
-        setWhiteUser ( new User ( "Alireza", "1" ) );
-        setBlackUser ( new User ( "Mahdi", "1" ) );
         whiteUser = getWhiteUser ();
         blackUser = getBlackUser ();
         limit = GameMenuController.limit;
@@ -278,6 +276,8 @@ public class ChessBoard extends Pane {
                     getStartTile ().getName ( startRow, startColumn ) +
                     " to " +
                     getEndTile ().getName ( endRow , endColumn );
+
+            chessMove.play ();
         } else {
             System.out.println ( "rival piece destroyed" );
 
@@ -298,6 +298,7 @@ public class ChessBoard extends Pane {
             }
 
             getChildren ().remove ( getEndTile ().getPiece ().imageView );
+            chessHit.play ();
 
         }
 
@@ -368,8 +369,6 @@ public class ChessBoard extends Pane {
         } );
 
         setOnMouseDragged( mouseEvent -> {
-//            endColumn = (int) (mouseEvent.getX ()/tileWidth);
-//            endRow = (int) (mouseEvent.getY ()/tileHeight);
             mouseEvent.setDragDetect(false);
             if (isPieceHere ()) {
                 getStartTile ().getPiece ( ).getImageView ( ).setLayoutX ( mouseEvent.getX ( ) - 30 );
@@ -421,6 +420,7 @@ public class ChessBoard extends Pane {
 
 
             if (isPieceSelected) {
+                chessMove.play ();
                 System.out.println ( "start row : " + startRow );
                 System.out.println ( "start column : " + startColumn );
             }
@@ -520,7 +520,7 @@ public class ChessBoard extends Pane {
         endGameScreen ( message );
     }
 
-    private void endGameScreen(String message) {
+    public void endGameScreen(String message) {
         AnchorPane gameOver = new AnchorPane (  );
 
         BoxBlur bb = new BoxBlur (  );
@@ -624,7 +624,6 @@ public class ChessBoard extends Pane {
             rectangle.maxWidth ( tileLength );
             rectangle.setFill ( Color.TRANSPARENT );
             rectangle.getTransforms ().add ( translate = new Translate (  ) );
-//            rectangle = tile.rectangle;
             this.setLayoutX ( columnPosition*tileLength );
             this.setLayoutY ( rowPosition*tileLength );
             getChildren ().add ( rectangle );
@@ -658,13 +657,6 @@ public class ChessBoard extends Pane {
                     piece.getImageView ( ).setEffect ( ds );
                 }
             }
-
-//        if (color == Color.GREEN)
-//            isHighlighted = true;
-        }
-
-        public void deleteRectangle () {
-            getChildren ().remove ( rectangle );
         }
 
         public void unhighlightTile () {

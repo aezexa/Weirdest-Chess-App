@@ -28,8 +28,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.regex.Pattern;
 
-import static main.App.getFXMLLoader;
-import static main.App.sound;
+import static main.App.*;
 
 public class RegisterController implements Initializable {
 
@@ -111,8 +110,11 @@ public class RegisterController implements Initializable {
             User.allUsers.add ( new User ( name , password ) );
             mediaPlayer = new MediaPlayer ( new Media ( new File ( "src/resources/congrats.mp3" ).toURI ().toString () ) );
             mediaPlayer.play ();
+            backgroundSong.pause ();
             registrationCompletedStage.showAndWait ();
             App.setRoot ( "mainScreen" );
+            if (!isPaused)
+                backgroundSong.play ( );
         }
     }
 

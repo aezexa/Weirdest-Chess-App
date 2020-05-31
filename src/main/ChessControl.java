@@ -1,6 +1,7 @@
 package main;
 
 import javafx.scene.control.Control;
+import javafx.scene.control.Label;
 import javafx.scene.control.SkinBase;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -12,7 +13,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import static main.App.inGame;
+import static main.App.*;
+import static main.App.playImage;
 
 public class ChessControl extends Control {
 
@@ -30,6 +32,27 @@ public class ChessControl extends Control {
         chessBar = new ChessBar (  );
         moveBar = new MoveBar ();
         currentChessBoard = new ChessBoard (chessBar, moveBar);
+
+//        ImageView playPause = new ImageView (  );
+//        if (isPaused) {
+//            playPause.setImage ( playImage );
+//        }
+//        else {
+//            playPause.setImage ( pauseImage );
+//        }
+//
+//        playPause.setOnMouseClicked ( event -> {
+//            if (isPaused) {
+//                backgroundSong.play ( );
+//                playPause.setImage ( pauseImage );
+//            }
+//            else {
+//                backgroundSong.pause ( );
+//                playPause.setImage ( playImage );
+//            }
+//            isPaused = !isPaused;
+//        } );
+
         FileInputStream input = null;
         try {
             input = new FileInputStream ( new File ( "." ).getCanonicalPath () + File.separator + "src" + File.separator + "resources" + File.separator + "board.png" );
@@ -55,8 +78,7 @@ public class ChessControl extends Control {
         } );
 
         chessBar.getForfeitButton ().setOnAction ( event -> {
-            System.out.println ( "What a loser!" );
-            System.out.println ( currentChessBoard.getOppositeTurnUser ().getName () + " won!" );
+            currentChessBoard.endGameScreen ( "What a loser! " + currentChessBoard.getOppositeTurnUser ().getName () + " won!" );
             currentChessBoard.getOppositeTurnUser ().addWins ();
             currentChessBoard.getOppositeTurnUser ().addScore ( 2 );
             currentChessBoard.getTurnUser ( ).addLosses ( );

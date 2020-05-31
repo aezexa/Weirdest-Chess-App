@@ -1,12 +1,16 @@
 package main;
 
 import javafx.geometry.HPos;
+import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+
+import static main.App.*;
 
 public class ChessBar extends HBox {
 
@@ -49,9 +53,38 @@ public class ChessBar extends HBox {
         RowConstraints rowConstraints = new RowConstraints ( 50 );
         barScreen.getRowConstraints ().addAll ( rowConstraints , rowConstraints );
 
+        StackPane stackPane = new StackPane (  );
+
+        ImageView playPause = new ImageView (  );
+        playPause.setPreserveRatio ( true );
+        playPause.setFitWidth ( 30 );
+        if (isPaused) {
+            playPause.setImage ( playImage );
+        } else {
+            playPause.setImage ( pauseImage );
+        }
+
+        playPause.setOnMouseClicked ( event -> {
+            if (isPaused) {
+                backgroundSong.play ( );
+                playPause.setImage ( pauseImage );
+            }
+            else {
+                backgroundSong.pause ( );
+                playPause.setImage ( playImage );
+            }
+            isPaused = !isPaused;
+        } );
+
         turn = new Label ( "" );
         timer = new Label ( "" );
-        barScreen.addColumn ( 0 , new Label ( "Turn" ) , turn );
+        Label turnText = new Label ( "Turn" );
+
+        stackPane.getChildren ().addAll ( turnText ,playPause );
+        StackPane.setAlignment ( turnText , Pos.CENTER );
+        StackPane.setAlignment ( playPause, Pos.TOP_LEFT );
+
+        barScreen.addColumn ( 0 , stackPane , turn );
         barScreen.addColumn ( 1 , forfeitButton , exitButton );
         barScreen.addColumn ( 2 , new Label ( "Time Left" ) , timer );
 
