@@ -80,12 +80,10 @@ public class ChessBoard extends Pane {
         board = new Tile[8][8];
         setWhiteUser ( chessBoard.whiteUser );
         setBlackUser ( chessBoard.blackUser );
+        limit = chessBoard.limit;
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                if (chessBoard.board[i][j] != null)
-                    board[i][j] = new Tile ( chessBoard.board[i][j] );
-                else
-                    board[i][j] = new Tile ( i , j );
+                board[i][j] = new Tile ( chessBoard.board[i][j] );
             }
         }
     }
@@ -150,13 +148,13 @@ public class ChessBoard extends Pane {
                 if (row == 0 || row == 1 || row == 6 || row == 7)
                     getChildren ().add ( board[row][column].getPiece ().getImageView () );
 
-        getWhiteUser ().setRemainingUndo ( 2 );
-        getBlackUser ().setRemainingUndo ( 2 );
+//        getWhiteUser ().setRemainingUndo ( 2 );
+//        getBlackUser ().setRemainingUndo ( 2 );
 
         states.add ( new ChessBoard ( this ) );
 
         mouseDragOption ();
-
+//        mouseClickOption ();
 
 
     }
@@ -165,15 +163,13 @@ public class ChessBoard extends Pane {
         unhighlightTiles ();
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
+                getChildren ().remove ( board[i][j] );
                 if (board[i][j].getPiece () != null)
                     getChildren ().remove ( board[i][j].getPiece ().getImageView () );
-            }
-        }
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
                 board[i][j] = states.get ( stateNumber ).board[i][j];
                 if (board[i][j].getPiece () != null)
                     getChildren ().add ( board[i][j].getPiece ().getImageView () );
+                getChildren ().add ( board[i][j] );
             }
         }
         int count = states.size () - stateNumber - 1;
@@ -183,7 +179,7 @@ public class ChessBoard extends Pane {
         }
 
         updateUndoHistory ( stateNumber );
-
+        board[0][0].rectangle.setStroke ( Color.BLACK );
 
         whiteUser.setTurn ( states.size ()%2 != 0 );
         blackUser.setTurn ( states.size ()%2 == 0 );
@@ -223,11 +219,9 @@ public class ChessBoard extends Pane {
     public void selectPiece () {
         isPieceSelected = false;
         if ( !hasSelectErrors ( endRow , endColumn ) ) {
-//            if ( board[endRow][endColumn].getPiece ().getOwner () == getWhiteUser () ) {
             isPieceSelected = true;
             startRow = endRow;
             startColumn = endColumn;
-//            }
         }
     }
 
@@ -319,7 +313,7 @@ public class ChessBoard extends Pane {
         getStartTile ().setPiece ( null );
 
         unhighlightTiles ();
-        getEndTile ().highlightTile ( Color.BLACK );
+        getEndTile ().highlightTile ( Color.BLACK , true );
         getEndTile ().getPiece ().getImageView ().setLayoutX ( 75* endColumn + 7.5 );
         getEndTile ().getPiece ().getImageView ().setLayoutY ( 75* endRow + 7.5 );
 
@@ -360,21 +354,22 @@ public class ChessBoard extends Pane {
     void beginDrag() {
         setOnDragDetected( mouseEvent -> {
             startFullDrag();
-            unhighlightTiles ();
-            Rectangle rectangle = board[startRow][startColumn].rectangle;
-            rectangle.setStroke ( Color.BLACK );
-            rectangle.setStrokeWidth ( 3 );
-            rectangle.setStrokeType ( StrokeType.INSIDE );
-
-            highlightPossibleTiles ();
             System.out.println ( "Event on Source: drag detected + " + endRow + " " + endColumn );
             startColumn = (int) (mouseEvent.getX ()/tileWidth);
             startRow = (int) (mouseEvent.getY ()/tileHeight);
+
+            unhighlightTiles ();
+
+            board[startRow][startColumn].highlightTile ( Color.BLACK , true );
+
+            if (!board[startRow][startColumn].isEmpty () && board[startRow][startColumn].getPiece ().getOwner () == getTurnUser ())
+                highlightPossibleTiles ();
+
         } );
 
         setOnMouseDragged( mouseEvent -> {
-            endColumn = (int) (mouseEvent.getX ()/tileWidth);
-            endRow = (int) (mouseEvent.getY ()/tileHeight);
+//            endColumn = (int) (mouseEvent.getX ()/tileWidth);
+//            endRow = (int) (mouseEvent.getY ()/tileHeight);
             mouseEvent.setDragDetect(false);
             if (isPieceHere ()) {
                 getStartTile ().getPiece ( ).getImageView ( ).setLayoutX ( mouseEvent.getX ( ) - 30 );
@@ -421,7 +416,9 @@ public class ChessBoard extends Pane {
             System.out.println ( "end row : " + endRow );
             System.out.println ( "end column : " + endColumn );
             System.out.println ( "end piece : " + getEndTile ().getPiece () );
+
             selectPiece ();
+
 
             if (isPieceSelected) {
                 System.out.println ( "start row : " + startRow );
@@ -441,7 +438,7 @@ public class ChessBoard extends Pane {
             endColumn = (int) (mouseEvent.getX ()/tileWidth);
             endRow = (int) (mouseEvent.getY ()/tileHeight);
             unhighlightTiles ();
-            getEndTile ().highlightTile ( Color.BLACK );
+            getEndTile ().highlightTile ( Color.BLACK , true );
             System.out.println ( "selected row : " + endRow );
             System.out.println ( "selected column : " + endColumn );
             System.out.println ( "selected piece : " + getEndTile ().getPiece () );
@@ -451,21 +448,25 @@ public class ChessBoard extends Pane {
                 System.out.println ( "selected row to move : " + startRow );
                 System.out.println ( "selected column to move : " + startColumn );
             }
+            unhighlightTiles ();
 
+            board[startRow][startColumn].highlightTile ( Color.BLACK , true );
+
+            if (!board[startRow][startColumn].isEmpty ())
+                highlightPossibleTiles ();
+            System.out.println ( "Event on Source: drag detected + " + endRow + " " + endColumn );
+            startColumn = (int) (mouseEvent.getX ()/tileWidth);
+            startRow = (int) (mouseEvent.getY ()/tileHeight);
         } );
         System.out.println ( "\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014" );
 
     }
 
     void highlightPossibleTiles () {
-        Rectangle rectangle;
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if (isDifferentColor (i,j) && board[startRow][startColumn].getPiece ().canMove ( startRow, i, startColumn, j , board)) {
-                    rectangle = board[i][j].rectangle;
-                    rectangle.setStroke ( Color.GREEN );
-                    rectangle.setStrokeWidth ( 3 );
-                    rectangle.setStrokeType ( StrokeType.INSIDE );
+                    board[i][j].highlightTile ( Color.GREEN , false );
                 }
             }
         }
@@ -536,31 +537,15 @@ public class ChessBoard extends Pane {
         gridPane.setMinSize ( 885 , 102 );
 
         Text text = new Text ( message );
-//        text.setStyle ( "-fx-font-weight: bold" );
-//        text.setStroke ( Color.BLACK );
-//        text.setStrokeWidth ( 0.5 );
         text.setFont ( Font.font ( "Comic Sans MS" , 20 ) );
-
         text.setFill ( Color.WHITESMOKE );
-//        text.setLayoutX ( 230 );
-//        text.setLayoutY ( 240 );
-//        text.setLayoutX ( 280 );
-//        text.setLayoutY ( 340 );
-//        text.setTextAlignment ( TextAlignment.CENTER );
 
         Text text1 = new Text ( "Wanna Play Again? :D" );
         text1.setFont ( Font.font ( "Comic Sans MS" , 20 ) );
         text1.setFill ( Color.WHITESMOKE );
 
-//        text1.setLayoutX ( 385 );
-//        text1.setLayoutY ( 360 );
-//        text1.setTextAlignment ( TextAlignment.CENTER );
-
         Button button = new Button ( "No" );
         button.setTextAlignment ( TextAlignment.CENTER );
-//        button.setLayoutX ( 425 );
-//        button.setLayoutY ( 380 );
-//        button.setAlignment ( Pos.CENTER );
         button.setDefaultButton ( true );
 
         ColumnConstraints columnConstraints = new ColumnConstraints (  );
@@ -635,6 +620,10 @@ public class ChessBoard extends Pane {
             this.setHeight ( tileLength );
             this.setWidth ( tileLength );
             rectangle = new Rectangle ( tileLength,tileLength );
+            rectangle.maxHeight ( tileLength );
+            rectangle.maxWidth ( tileLength );
+            rectangle.setFill ( Color.TRANSPARENT );
+            rectangle.getTransforms ().add ( translate = new Translate (  ) );
 //            rectangle = tile.rectangle;
             this.setLayoutX ( columnPosition*tileLength );
             this.setLayoutY ( rowPosition*tileLength );
@@ -653,18 +642,29 @@ public class ChessBoard extends Pane {
                 this.setPiece ( new Rook ( (Rook) tile.getPiece () ) );
         }
 
-        public void highlightTile ( Color color ) {
+        public void highlightTile ( Color color , boolean haveShadow ) {
+
             rectangle.setStrokeType( StrokeType.INSIDE );
             rectangle.setStrokeWidth(3);
-            rectangle.setStroke(Color.BLACK);
-            DropShadow ds = new DropShadow ( 20 , Color.AQUA );
-            if (piece != null) {
-                piece.getImageView ( ).requestFocus ( );
-                piece.getImageView ( ).setEffect ( ds );
+            rectangle.setStroke( color );
+
+            System.out.println ( rectangle.hashCode () );
+            System.out.println ( rectangle );
+
+            if (haveShadow) {
+                DropShadow ds = new DropShadow ( 20 , Color.AQUA );
+                if ( piece != null ) {
+                    piece.getImageView ( ).requestFocus ( );
+                    piece.getImageView ( ).setEffect ( ds );
+                }
             }
 
-        if (color == Color.GREEN)
-            isHighlighted = true;
+//        if (color == Color.GREEN)
+//            isHighlighted = true;
+        }
+
+        public void deleteRectangle () {
+            getChildren ().remove ( rectangle );
         }
 
         public void unhighlightTile () {
