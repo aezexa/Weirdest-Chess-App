@@ -19,7 +19,7 @@ public class LoginCompletedController implements Initializable {
     }
 
     public void setName ( String name ) {
-        usernameLabel.setText ( "Welcome To The Game " + name + "!" );
+        usernameLabel.setText ( "Welcome To The Game\n" + name + "!" );
         hintLabel.setText ( "(This will be just a waste of your time lol)" );
     }
 }
