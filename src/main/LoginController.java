@@ -62,6 +62,7 @@ public class LoginController {
                 App.setRoot ( "gameMenuScreen" );
             } );
             scene.addEventHandler ( KeyEvent.KEY_PRESSED, keyEvent -> {
+                delay.stop ();
                 window.close();
                 App.setRoot ( "gameMenuScreen" );
             } );
