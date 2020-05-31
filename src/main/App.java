@@ -78,7 +78,7 @@ public class App extends Application {
         chessMove = new AudioClip ( new File ( "src/resources/chessMove.mp3" ).toURI ().toString () );
         backgroundSong = new MediaPlayer ( new Media ( App.class.getResource("/resources/backgroundSong.mp3").toExternalForm() ) );
         backgroundSong.setCycleCount ( AudioClip.INDEFINITE );
-        backgroundSong.setVolume ( 0.1 );
+        backgroundSong.setVolume ( 0.02 );
         backgroundSong.play ();
     }
 
