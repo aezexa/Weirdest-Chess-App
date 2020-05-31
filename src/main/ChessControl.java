@@ -33,26 +33,6 @@ public class ChessControl extends Control {
         moveBar = new MoveBar ();
         currentChessBoard = new ChessBoard (chessBar, moveBar);
 
-//        ImageView playPause = new ImageView (  );
-//        if (isPaused) {
-//            playPause.setImage ( playImage );
-//        }
-//        else {
-//            playPause.setImage ( pauseImage );
-//        }
-//
-//        playPause.setOnMouseClicked ( event -> {
-//            if (isPaused) {
-//                backgroundSong.play ( );
-//                playPause.setImage ( pauseImage );
-//            }
-//            else {
-//                backgroundSong.pause ( );
-//                playPause.setImage ( playImage );
-//            }
-//            isPaused = !isPaused;
-//        } );
-
         FileInputStream input = null;
         try {
             input = new FileInputStream ( new File ( "." ).getCanonicalPath () + File.separator + "src" + File.separator + "resources" + File.separator + "board.png" );

@@ -226,11 +226,9 @@ public class ChessBoard extends Pane {
     boolean hasSelectErrors ( int row , int column ) {
 
         if ( board[row][column].getPiece () == null ) {
-            System.out.println ( "no piece on this spot" );
             return true;
         }
         if ( board[row][column].getPiece ().getOwner () == getOppositeTurnUser () ) {
-            System.out.println ( "you can only select one of your pieces" );
             return true;
         }
         return false;
@@ -265,7 +263,6 @@ public class ChessBoard extends Pane {
         String moveString;
 
         if ( board[endRow][endColumn].getPiece () == null ) { //if we didn't have a kill
-            System.out.println ( "moved" );
 
             //setting booleans
             prevOppositeTurnOwnership = false;
@@ -279,7 +276,6 @@ public class ChessBoard extends Pane {
 
             chessMove.play ();
         } else {
-            System.out.println ( "rival piece destroyed" );
 
             //setting booleans
             prevOppositeTurnOwnership = true;
@@ -327,7 +323,6 @@ public class ChessBoard extends Pane {
 
     private boolean hasMoveErrors ( ) {
         if ( !isDifferentColor (endRow,endColumn) || !getStartTile ().getPiece ().canMove ( startRow , endRow , startColumn , endColumn, board )) {
-            System.out.println ( "cannot move to the spot" );
             return true;
         }
         return false;
@@ -355,7 +350,6 @@ public class ChessBoard extends Pane {
     void beginDrag() {
         setOnDragDetected( mouseEvent -> {
             startFullDrag();
-            System.out.println ( "Event on Source: drag detected + " + endRow + " " + endColumn );
             startColumn = (int) (mouseEvent.getX ()/tileWidth);
             startRow = (int) (mouseEvent.getY ()/tileHeight);
 
@@ -380,8 +374,6 @@ public class ChessBoard extends Pane {
             endColumn = (int) (mouseEvent.getX ()/tileWidth);
             endRow = (int) (mouseEvent.getY ()/tileHeight);
             setMouseTransparent(false);
-            System.out.println ( "Event on Source: mouse released + " + endRow + " " + endColumn );
-            System.out.println ( "\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014" );
             if (isPieceHere ()) {
                 if ( isPieceSelected && !isSameTile ( ) && !hasMoveErrors ( )) {
                     acceptDrag ( );
@@ -408,21 +400,15 @@ public class ChessBoard extends Pane {
         setOnMousePressed ( mouseEvent -> {
 
             setMouseTransparent(true);
-            System.out.println ( "Event on Source: mouse pressed" );
 
             endColumn = (int) (mouseEvent.getX ()/tileWidth);
             endRow = (int) (mouseEvent.getY ()/tileHeight);
-            System.out.println ( "end row : " + endRow );
-            System.out.println ( "end column : " + endColumn );
-            System.out.println ( "end piece : " + getEndTile ().getPiece () );
 
             selectPiece ();
 
 
             if (isPieceSelected) {
                 chessMove.play ();
-                System.out.println ( "start row : " + startRow );
-                System.out.println ( "start column : " + startColumn );
             }
             mouseEvent.setDragDetect ( true );
         } );
@@ -439,14 +425,10 @@ public class ChessBoard extends Pane {
             endRow = (int) (mouseEvent.getY ()/tileHeight);
             unhighlightTiles ();
             getEndTile ().highlightTile ( Color.BLACK , true );
-            System.out.println ( "selected row : " + endRow );
-            System.out.println ( "selected column : " + endColumn );
-            System.out.println ( "selected piece : " + getEndTile ().getPiece () );
             selectPiece ();
 
             if (isPieceSelected) {
-                System.out.println ( "selected row to move : " + startRow );
-                System.out.println ( "selected column to move : " + startColumn );
+                chessMove.play ();
             }
             unhighlightTiles ();
 
@@ -454,11 +436,9 @@ public class ChessBoard extends Pane {
 
             if (!board[startRow][startColumn].isEmpty ())
                 highlightPossibleTiles ();
-            System.out.println ( "Event on Source: drag detected + " + endRow + " " + endColumn );
             startColumn = (int) (mouseEvent.getX ()/tileWidth);
             startRow = (int) (mouseEvent.getY ()/tileHeight);
         } );
-        System.out.println ( "\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014" );
 
     }
 
@@ -646,9 +626,6 @@ public class ChessBoard extends Pane {
             rectangle.setStrokeType( StrokeType.INSIDE );
             rectangle.setStrokeWidth(3);
             rectangle.setStroke( color );
-
-            System.out.println ( rectangle.hashCode () );
-            System.out.println ( rectangle );
 
             if (haveShadow) {
                 DropShadow ds = new DropShadow ( 20 , Color.AQUA );
